@@ -22,7 +22,8 @@ class PizzeriaServiceTest
         addonRepository.save(addon);
         PizzeriaService pizzeriaService = new PizzeriaService(addonRepository);
 
-        Addon firstAddon = pizzeriaService.findAll().get(0);
+        List<Addon> addons = pizzeriaService.findAll();
+        Addon firstAddon = addons.get(addons.size() - 1);
 
         assertEquals(addon.getName(), firstAddon.getName());
         assertEquals(addon.getPrice(), firstAddon.getPrice());
