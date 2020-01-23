@@ -14,13 +14,6 @@ public class Addon
     private String name;
     private float price;
 
-    public Addon(Integer id, String name, long price)
-    {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
-
     public Addon(String name, long price)
     {
         this.name = name;

@@ -19,4 +19,9 @@ public class PizzeriaService
     {
         return addonRepository.findAll();
     }
+
+    public Addon save(Addon addon)
+    {
+        return addonRepository.save(addon);
+    }
 }
