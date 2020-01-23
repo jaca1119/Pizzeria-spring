@@ -2,7 +2,7 @@ package com.itvsme.pizzeria.Controller;
 
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.Pizza;
-import com.itvsme.pizzeria.Service.PizzeriaService;
+import com.itvsme.pizzeria.Service.AddonsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,23 +17,23 @@ import java.util.List;
 public class PizzeriaController
 {
     @Autowired
-    private PizzeriaService pizzeriaService;
+    private AddonsService addonsService;
 
     @GetMapping("/addons")
     public ResponseEntity<List<Addon>> getAllAddons()
     {
-        return new ResponseEntity<>(pizzeriaService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(addonsService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping("/addons")
     public ResponseEntity<Addon> createAddon(@RequestBody Addon addon)
     {
-        return new ResponseEntity<>(pizzeriaService.save(addon), HttpStatus.CREATED);
+        return new ResponseEntity<>(addonsService.save(addon), HttpStatus.CREATED);
     }
 
     @GetMapping("/standard")
     public ResponseEntity<List<Pizza>> getAllStandardPizzas()
     {
-        return new ResponseEntity<>(pizzeriaService.findAllStandardPizzas(), HttpStatus.OK);
+        return new ResponseEntity<>(addonsService.findAllStandardPizzas(), HttpStatus.OK);
     }
 }

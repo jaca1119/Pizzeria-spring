@@ -1,9 +1,9 @@
-package com.itvsme.pizzeria;
+package com.itvsme.pizzeria.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.Pizza;
-import com.itvsme.pizzeria.Service.PizzeriaService;
+import com.itvsme.pizzeria.Service.AddonsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -32,7 +32,7 @@ public class PizzeriaControllerTest
     MockMvc mockMvc;
 
     @MockBean
-    private PizzeriaService pizzeriaService;
+    private AddonsService addonsService;
 
     @Test
     void getAllAddonsTest() throws Exception
@@ -40,7 +40,7 @@ public class PizzeriaControllerTest
         List<Addon> addonList = new ArrayList<>();
         addonList.add(new Addon("onion", 3L));
         addonList.add(new Addon("pepper", 3L));
-        when(pizzeriaService.findAll()).thenReturn(addonList);
+        when(addonsService.findAll()).thenReturn(addonList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/addons")
         .contentType(MediaType.APPLICATION_JSON)
@@ -51,7 +51,7 @@ public class PizzeriaControllerTest
     void successAddonAddTest() throws Exception
     {
         Addon addon = new Addon("maize", 3L);
-        when(pizzeriaService.save(any(Addon.class))).thenReturn(addon);
+        when(addonsService.save(any(Addon.class))).thenReturn(addon);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String addonToJson = objectMapper.writeValueAsString(addon);
@@ -75,7 +75,7 @@ public class PizzeriaControllerTest
         pizzaList.add(new Pizza("Margherita", Arrays.asList(margheritaAddons)));
         pizzaList.add(new Pizza("Sample", Arrays.asList(sampleAddons)));
 
-        when(pizzeriaService.findAllStandardPizzas()).thenReturn(pizzaList);
+        when(addonsService.findAllStandardPizzas()).thenReturn(pizzaList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/standard")
         .contentType(MediaType.APPLICATION_JSON)

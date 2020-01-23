@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PizzeriaService
+public class AddonsService
 {
     private AddonRepository addonRepository;
 
-    public PizzeriaService(AddonRepository addonRepository)
+    public AddonsService(AddonRepository addonRepository)
     {
         this.addonRepository = addonRepository;
     }

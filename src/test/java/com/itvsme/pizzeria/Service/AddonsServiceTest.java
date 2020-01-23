@@ -1,9 +1,8 @@
-package com.itvsme.pizzeria;
+package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Repository.AddonRepository;
 import com.itvsme.pizzeria.Repository.PizzaRepository;
-import com.itvsme.pizzeria.Service.PizzeriaService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +13,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class PizzeriaServiceTest
+class AddonsServiceTest
 {
     @Autowired
     private AddonRepository addonRepository;
-
-    @Autowired
-    private PizzaRepository repository;
 
     @AfterEach
     void tearDown()
@@ -29,24 +25,24 @@ class PizzeriaServiceTest
     }
 
     @Test
-    void getAllAddons()
+    void saveAndGetLastAddon()
     {
         Addon addon = new Addon("cucumber", 2L);
         addonRepository.save(addon);
-        PizzeriaService pizzeriaService = new PizzeriaService(addonRepository);
+        AddonsService addonsService = new AddonsService(addonRepository);
 
-        List<Addon> addons = pizzeriaService.findAll();
-        Addon firstAddon = addons.get(addons.size() - 1);
+        List<Addon> addons = addonsService.findAll();
+        Addon lastAddon = addons.get(addons.size() - 1);
 
-        assertEquals(addon.getName(), firstAddon.getName());
-        assertEquals(addon.getPrice(), firstAddon.getPrice());
-        assertEquals(addon.getId(), firstAddon.getId());
+        assertEquals(addon.getName(), lastAddon.getName());
+        assertEquals(addon.getPrice(), lastAddon.getPrice());
+        assertEquals(addon.getId(), lastAddon.getId());
     }
 
     @Test
     void saveAddon()
     {
-        PizzeriaService service = new PizzeriaService(addonRepository);
+        AddonsService service = new AddonsService(addonRepository);
         Addon sample = new Addon("sample", 1L);
 
         service.save(sample);
