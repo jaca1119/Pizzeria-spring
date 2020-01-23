@@ -28,8 +28,4 @@ public class AddonsService
         return addonRepository.save(addon);
     }
 
-    public List<Pizza> findAllStandardPizzas()
-    {
-        return new ArrayList<>();
-    }
 }

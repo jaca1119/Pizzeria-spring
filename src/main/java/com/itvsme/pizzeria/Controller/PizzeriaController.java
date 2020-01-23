@@ -3,6 +3,7 @@ package com.itvsme.pizzeria.Controller;
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.Pizza;
 import com.itvsme.pizzeria.Service.AddonsService;
+import com.itvsme.pizzeria.Service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ public class PizzeriaController
     @Autowired
     private AddonsService addonsService;
 
+    @Autowired
+    private PizzaService pizzaService;
+
     @GetMapping("/addons")
     public ResponseEntity<List<Addon>> getAllAddons()
     {
@@ -34,6 +38,6 @@ public class PizzeriaController
     @GetMapping("/standard")
     public ResponseEntity<List<Pizza>> getAllStandardPizzas()
     {
-        return new ResponseEntity<>(addonsService.findAllStandardPizzas(), HttpStatus.OK);
+        return new ResponseEntity<>(pizzaService.findAll(), HttpStatus.OK);
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.Pizza;
 import com.itvsme.pizzeria.Service.AddonsService;
+import com.itvsme.pizzeria.Service.PizzaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,6 +34,9 @@ public class PizzeriaControllerTest
 
     @MockBean
     private AddonsService addonsService;
+
+    @MockBean
+    private PizzaService pizzaService;
 
     @Test
     void getAllAddonsTest() throws Exception
@@ -75,7 +79,7 @@ public class PizzeriaControllerTest
         pizzaList.add(new Pizza("Margherita", Arrays.asList(margheritaAddons)));
         pizzaList.add(new Pizza("Sample", Arrays.asList(sampleAddons)));
 
-        when(addonsService.findAllStandardPizzas()).thenReturn(pizzaList);
+        when(pizzaService.findAll()).thenReturn(pizzaList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/standard")
         .contentType(MediaType.APPLICATION_JSON)

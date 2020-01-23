@@ -1,11 +1,6 @@
 package com.itvsme.pizzeria.Model;
 
-import com.itvsme.pizzeria.Model.Addon;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -17,8 +12,9 @@ public class Pizza
 
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Addon> addons;
+
 
     public Pizza(String name, List<Addon> addons)
     {
