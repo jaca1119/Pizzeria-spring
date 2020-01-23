@@ -1,11 +1,13 @@
 package com.itvsme.pizzeria;
 
+import com.itvsme.pizzeria.Model.Addon;
+import com.itvsme.pizzeria.Repository.AddonRepository;
+import com.itvsme.pizzeria.Repository.PizzaRepository;
+import com.itvsme.pizzeria.Service.PizzeriaService;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
@@ -16,6 +18,9 @@ class PizzeriaServiceTest
 {
     @Autowired
     private AddonRepository addonRepository;
+
+    @Autowired
+    private PizzaRepository repository;
 
     @AfterEach
     void tearDown()

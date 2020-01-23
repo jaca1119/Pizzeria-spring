@@ -1,26 +1,32 @@
-package com.itvsme.pizzeria;
+package com.itvsme.pizzeria.Model;
+
+import com.itvsme.pizzeria.Model.Addon;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
-public class Addon
+public class Pizza
 {
     @Id
     @GeneratedValue
     private Integer id;
 
     private String name;
-    private float price;
 
-    public Addon(String name, long price)
+    @OneToMany
+    private List<Addon> addons;
+
+    public Pizza(String name, List<Addon> addons)
     {
         this.name = name;
-        this.price = price;
+        this.addons = addons;
     }
 
-    public Addon()
+    public Pizza()
     {
     }
 
@@ -44,13 +50,13 @@ public class Addon
         this.name = name;
     }
 
-    public float getPrice()
+    public List<Addon> getAddons()
     {
-        return price;
+        return addons;
     }
 
-    public void setPrice(float price)
+    public void setAddons(List<Addon> addons)
     {
-        this.price = price;
+        this.addons = addons;
     }
 }

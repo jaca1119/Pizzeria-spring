@@ -1,5 +1,8 @@
-package com.itvsme.pizzeria;
+package com.itvsme.pizzeria.Service;
 
+import com.itvsme.pizzeria.Model.Addon;
+import com.itvsme.pizzeria.Model.Pizza;
+import com.itvsme.pizzeria.Repository.AddonRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,5 +26,10 @@ public class PizzeriaService
     public Addon save(Addon addon)
     {
         return addonRepository.save(addon);
+    }
+
+    public List<Pizza> findAllStandardPizzas()
+    {
+        return new ArrayList<>();
     }
 }
