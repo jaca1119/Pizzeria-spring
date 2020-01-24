@@ -1,9 +1,12 @@
 package com.itvsme.pizzeria.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itvsme.pizzeria.Model.Addon;
+import com.itvsme.pizzeria.Model.ComposedPizza;
 import com.itvsme.pizzeria.Model.StandardPizza;
 import com.itvsme.pizzeria.Service.AddonsService;
+import com.itvsme.pizzeria.Service.ComposedPizzaService;
 import com.itvsme.pizzeria.Service.StandardPizzaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @WebMvcTest
 public class PizzeriaControllerTest
@@ -37,6 +42,9 @@ public class PizzeriaControllerTest
 
     @MockBean
     private StandardPizzaService standardPizzaService;
+
+    @MockBean
+    private ComposedPizzaService composedPizzaService;
 
     @Test
     void getAllAddonsTest() throws Exception
@@ -84,5 +92,26 @@ public class PizzeriaControllerTest
         mockMvc.perform(MockMvcRequestBuilders.get("/standard")
         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(jsonPath("$", hasSize(2))).andDo(print());
+    }
+
+    @Test
+    void saveComposedPizzaTest() throws Exception
+    {
+        ComposedPizza composedPizza = new ComposedPizza(Stream.of(new Addon("Sample", 3L), new Addon("Sample_two", 2L)).collect(Collectors.toList()));
+
+        when(composedPizzaService.save(any(ComposedPizza.class))).thenReturn(composedPizza);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String composedPizzaJson = objectMapper.writeValueAsString(composedPizza);
+
+        ResultActions result = mockMvc.perform(post("/composed")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(composedPizzaJson));
+
+        result.andExpect(status().isCreated())
+                .andExpect(jsonPath("$.addons[0].name").value("Sample"))
+                .andExpect(jsonPath("$.addons[0].price").value(3L))
+                .andExpect(jsonPath("$.addons[1].name").value("Sample_two"))
+                .andExpect(jsonPath("$.addons[1].price").value(2L));
     }
 }
