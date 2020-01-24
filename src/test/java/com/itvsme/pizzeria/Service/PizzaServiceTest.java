@@ -4,6 +4,7 @@ import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.Pizza;
 import com.itvsme.pizzeria.PizzeriaApplication;
 import com.itvsme.pizzeria.Repository.PizzaRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,12 @@ class PizzaServiceTest
 {
     @Autowired
     private PizzaRepository repository;
+
+    @AfterEach
+    void tearDown()
+    {
+        repository.deleteAll();
+    }
 
     @Test
     void findAllStandardPizzas()
