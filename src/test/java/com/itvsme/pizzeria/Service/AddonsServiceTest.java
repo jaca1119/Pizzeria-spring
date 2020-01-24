@@ -2,7 +2,6 @@ package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Repository.AddonRepository;
-import com.itvsme.pizzeria.Repository.PizzaRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

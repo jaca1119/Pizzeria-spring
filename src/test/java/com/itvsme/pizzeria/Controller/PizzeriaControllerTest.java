@@ -2,9 +2,9 @@ package com.itvsme.pizzeria.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itvsme.pizzeria.Model.Addon;
-import com.itvsme.pizzeria.Model.Pizza;
+import com.itvsme.pizzeria.Model.StandardPizza;
 import com.itvsme.pizzeria.Service.AddonsService;
-import com.itvsme.pizzeria.Service.PizzaService;
+import com.itvsme.pizzeria.Service.StandardPizzaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -36,7 +36,7 @@ public class PizzeriaControllerTest
     private AddonsService addonsService;
 
     @MockBean
-    private PizzaService pizzaService;
+    private StandardPizzaService standardPizzaService;
 
     @Test
     void getAllAddonsTest() throws Exception
@@ -72,14 +72,14 @@ public class PizzeriaControllerTest
     @Test
     void getAllStandardPizzas() throws Exception
     {
-        List<Pizza> pizzaList = new ArrayList<>();
+        List<StandardPizza> standardPizzaList = new ArrayList<>();
         Addon[] margheritaAddons = {new Addon("onion", 3L), new Addon("pepper", 3L)};
         Addon[] sampleAddons = {new Addon("onion", 3L), new Addon("pepper", 3L), new Addon("maize", 3L)};
 
-        pizzaList.add(new Pizza("Margherita", Arrays.asList(margheritaAddons)));
-        pizzaList.add(new Pizza("Sample", Arrays.asList(sampleAddons)));
+        standardPizzaList.add(new StandardPizza("Margherita", Arrays.asList(margheritaAddons)));
+        standardPizzaList.add(new StandardPizza("Sample", Arrays.asList(sampleAddons)));
 
-        when(pizzaService.findAll()).thenReturn(pizzaList);
+        when(standardPizzaService.findAll()).thenReturn(standardPizzaList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/standard")
         .contentType(MediaType.APPLICATION_JSON)

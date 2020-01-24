@@ -1,11 +1,9 @@
 package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.Addon;
-import com.itvsme.pizzeria.Model.Pizza;
 import com.itvsme.pizzeria.Repository.AddonRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
