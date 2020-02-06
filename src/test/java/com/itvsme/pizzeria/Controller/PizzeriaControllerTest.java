@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -113,5 +115,14 @@ public class PizzeriaControllerTest
                 .andExpect(jsonPath("$.addons[0].price").value(3L))
                 .andExpect(jsonPath("$.addons[1].name").value("Sample_two"))
                 .andExpect(jsonPath("$.addons[1].price").value(2L));
+    }
+
+    @Test
+    void deleteByIdAddon() throws Exception
+    {
+        mockMvc.perform(delete("/addons/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        ).andExpect(status().isOk());
     }
 }

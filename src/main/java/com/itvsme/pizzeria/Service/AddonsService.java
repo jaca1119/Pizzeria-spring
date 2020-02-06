@@ -26,4 +26,9 @@ public class AddonsService
         return addonRepository.save(addon);
     }
 
+    public Void deleteById(int id)
+    {
+        addonRepository.deleteById(id);
+        return null;
+    }
 }

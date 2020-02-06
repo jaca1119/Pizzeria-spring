@@ -47,4 +47,10 @@ public class PizzeriaController
     {
         return new ResponseEntity<>(standardPizzaService.findAll(), HttpStatus.OK);
     }
+
+    @DeleteMapping("/addons/{id}")
+    public ResponseEntity<Void> deleteAddon(@PathVariable Integer id)
+    {
+        return new ResponseEntity<>(addonsService.deleteById(id), HttpStatus.OK);
+    }
 }

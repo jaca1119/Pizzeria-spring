@@ -48,4 +48,18 @@ class AddonsServiceTest
 
         assertEquals(1.0, addonRepository.count());
     }
+
+    @Test
+    void deleteByIdAddon()
+    {
+        AddonsService service = new AddonsService(addonRepository);
+
+        Addon sample = new Addon("sample", 1L);
+
+        service.save(sample);
+
+        service.deleteById(1);
+
+        assertTrue(service.findAll().isEmpty());
+    }
 }
