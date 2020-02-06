@@ -58,7 +58,7 @@ class AddonsServiceTest
 
         service.save(sample);
 
-        service.deleteById(1);
+        service.deleteById(sample.getId());
 
         assertTrue(service.findAll().isEmpty());
     }
