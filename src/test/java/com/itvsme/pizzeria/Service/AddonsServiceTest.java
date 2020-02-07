@@ -24,6 +24,21 @@ class AddonsServiceTest
     }
 
     @Test
+    void getOneAddon()
+    {
+        AddonsService service = new AddonsService(addonRepository);
+        Addon addon = new Addon("cucumber", 2L);
+
+        service.save(addon);
+
+        Addon received = service.findById(addon.getId());
+
+        assertEquals(addon.getId(), received.getId());
+        assertEquals(addon.getName(), received.getName());
+        assertEquals(addon.getPrice(), received.getPrice());
+    }
+
+    @Test
     void saveAndGetLastAddon()
     {
         Addon addon = new Addon("cucumber", 2L);

@@ -30,6 +30,12 @@ public class PizzeriaController
         return new ResponseEntity<>(addonsService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/addons/{id}")
+    public ResponseEntity<Addon> getAddonById(@PathVariable Integer id)
+    {
+        return new ResponseEntity<>(addonsService.findById(id), HttpStatus.OK);
+    }
+
     @PostMapping("/addons")
     public ResponseEntity<Addon> createAddon(@RequestBody Addon addon)
     {

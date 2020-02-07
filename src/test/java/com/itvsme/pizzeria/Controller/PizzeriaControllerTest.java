@@ -21,8 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,6 +46,20 @@ public class PizzeriaControllerTest
 
     @MockBean
     private ComposedPizzaService composedPizzaService;
+
+    @Test
+    void getOneAddon() throws Exception
+    {
+        Addon addon = new Addon("cucumber", 2L);
+
+        when(addonsService.findById(any(Integer.class))).thenReturn(addon);
+
+        mockMvc.perform(get("/addons/{id}", 1)
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("cucumber"))
+                .andExpect(jsonPath("$.price").value(2L));
+    }
 
     @Test
     void getAllAddonsTest() throws Exception
