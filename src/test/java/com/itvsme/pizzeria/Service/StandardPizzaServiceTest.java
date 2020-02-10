@@ -2,11 +2,13 @@ package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.StandardPizza;
+import com.itvsme.pizzeria.Repository.AddonRepository;
 import com.itvsme.pizzeria.Repository.StandardPizzaRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -16,14 +18,22 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@DataJpaTest
 class StandardPizzaServiceTest
 {
     @Autowired
     private StandardPizzaRepository repository;
+    @Autowired
+    private AddonRepository addonRepository;
 
     @AfterEach
     void tearDown()
+    {
+        repository.deleteAll();
+    }
+
+    @BeforeEach
+    void setUp()
     {
         repository.deleteAll();
     }
@@ -36,7 +46,7 @@ class StandardPizzaServiceTest
         StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
 
         repository.save(margherita);
-        StandardPizzaService standardPizzaService = new StandardPizzaService(repository);
+        StandardPizzaService standardPizzaService = new StandardPizzaService(repository, addonRepository);
 
         List<StandardPizza> standardPizzas = standardPizzaService.findAll();
         StandardPizza lastStandardPizza = standardPizzas.get(standardPizzas.size() - 1);
@@ -47,7 +57,7 @@ class StandardPizzaServiceTest
     @Test
     void saveStandardPizzaTest()
     {
-        StandardPizzaService standardPizzaService = new StandardPizzaService(repository);
+        StandardPizzaService standardPizzaService = new StandardPizzaService(repository, addonRepository);
 
         Addon onion = new Addon("onion", 3L);
         Addon pepper = new Addon("pepper", 3L);
@@ -78,7 +88,7 @@ class StandardPizzaServiceTest
         standardPizzaList.add(margherita);
         standardPizzaList.add(sampleStandardPizza);
 
-        StandardPizzaService standardPizzaService = new StandardPizzaService(repository);
+        StandardPizzaService standardPizzaService = new StandardPizzaService(repository, addonRepository);
 
         List<StandardPizza> standardPizzas = standardPizzaService.findAll();
 

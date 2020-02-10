@@ -4,6 +4,7 @@ import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Repository.AddonRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,9 @@ public class AddonsService
 
     public List<Addon> findAll()
     {
-        return addonRepository.findAll();
+        List<Addon> addons = new ArrayList<>();
+        addonRepository.findAll().forEach(addons::add);
+        return addons;
     }
 
     public Addon save(Addon addon)
@@ -38,5 +41,10 @@ public class AddonsService
         Optional<Addon> addon = addonRepository.findById(i);
 
         return addon.orElse(null);
+    }
+
+    public Optional<Addon> findByName(String name)
+    {
+        return addonRepository.findByName(name);
     }
 }

@@ -12,9 +12,10 @@ import java.util.List;
 public class ComposedPizza
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
-    @OneToMany(cascade = CascadeType.PERSIST)
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
     protected List<Addon> addons;
 
     public ComposedPizza(List<Addon> addons)

@@ -1,10 +1,10 @@
 package com.itvsme.pizzeria.Repository;
 
 import com.itvsme.pizzeria.Model.ComposedPizza;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ComposedPizzaRepository extends JpaRepository<ComposedPizza, Integer>
+public interface ComposedPizzaRepository extends CrudRepository<ComposedPizza, Integer>
 {
 }

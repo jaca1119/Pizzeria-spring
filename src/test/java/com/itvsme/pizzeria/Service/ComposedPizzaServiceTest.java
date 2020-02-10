@@ -2,12 +2,12 @@ package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.ComposedPizza;
-import com.itvsme.pizzeria.Model.StandardPizza;
 import com.itvsme.pizzeria.Repository.ComposedPizzaRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@DataJpaTest
 public class ComposedPizzaServiceTest
 {
     @Autowired
@@ -25,6 +25,12 @@ public class ComposedPizzaServiceTest
 
     @AfterEach
     void tearDown()
+    {
+        repository.deleteAll();
+    }
+
+    @BeforeEach
+    void setUp()
     {
         repository.deleteAll();
     }

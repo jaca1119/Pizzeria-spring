@@ -1,12 +1,12 @@
 package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.ComposedPizza;
-import com.itvsme.pizzeria.Model.StandardPizza;
 import com.itvsme.pizzeria.Repository.ComposedPizzaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class ComposedPizzaService
@@ -25,6 +25,8 @@ public class ComposedPizzaService
 
     public List<ComposedPizza> findAll()
     {
-        return repository.findAll();
+        List<ComposedPizza> composed = new ArrayList<>();
+        repository.findAll().forEach(composed::add);
+        return composed;
     }
 }

@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Addon
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
