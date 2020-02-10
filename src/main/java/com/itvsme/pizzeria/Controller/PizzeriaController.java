@@ -17,12 +17,17 @@ import java.util.List;
 @CrossOrigin
 public class PizzeriaController
 {
-    @Autowired
     private AddonsService addonsService;
-    @Autowired
     private StandardPizzaService standardPizzaService;
-    @Autowired
     private ComposedPizzaService composedPizzaService;
+
+    @Autowired
+    public PizzeriaController(AddonsService addonsService, StandardPizzaService standardPizzaService, ComposedPizzaService composedPizzaService)
+    {
+        this.addonsService = addonsService;
+        this.standardPizzaService = standardPizzaService;
+        this.composedPizzaService = composedPizzaService;
+    }
 
     @GetMapping("/addons")
     public ResponseEntity<List<Addon>> getAllAddons()
@@ -52,6 +57,12 @@ public class PizzeriaController
     public ResponseEntity<List<StandardPizza>> getAllStandardPizzas()
     {
         return new ResponseEntity<>(standardPizzaService.findAll(), HttpStatus.OK);
+    }
+
+    @PostMapping("/standard")
+    public ResponseEntity<StandardPizza> saveStandardPizza(@RequestBody StandardPizza standardPizza)
+    {
+        return new ResponseEntity<>(standardPizzaService.save(standardPizza), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/addons/{id}")

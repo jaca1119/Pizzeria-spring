@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class StandardStandardPizzaServiceTest
+class StandardPizzaServiceTest
 {
     @Autowired
     private StandardPizzaRepository repository;

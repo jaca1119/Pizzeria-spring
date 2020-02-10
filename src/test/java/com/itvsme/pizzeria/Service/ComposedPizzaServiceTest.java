@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class ComposedPizzaTest
+public class ComposedPizzaServiceTest
 {
     @Autowired
     private ComposedPizzaRepository repository;

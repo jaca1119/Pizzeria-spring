@@ -110,6 +110,30 @@ public class PizzeriaControllerTest
     }
 
     @Test
+    void saveStandardPizzaTest() throws Exception
+    {
+        Addon[] margheritaAddons = {new Addon("onion", 3L), new Addon("pepper", 3L)};
+
+        StandardPizza standardPizza = new StandardPizza("Margherita", Arrays.asList(margheritaAddons));
+
+        when(standardPizzaService.save(any(StandardPizza.class))).thenReturn(standardPizza);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String standardPizzaJSON = objectMapper.writeValueAsString(standardPizza);
+
+        mockMvc.perform(
+                post("/standard")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(standardPizzaJSON)
+        ).andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Margherita"))
+                .andExpect(jsonPath("$.addons[0].name").value("onion"))
+                .andExpect(jsonPath("$.addons[0].price").value(3L))
+                .andExpect(jsonPath("$.addons[1].name").value("pepper"))
+                .andExpect(jsonPath("$.addons[1].price").value(3L));
+    }
+
+    @Test
     void saveComposedPizzaTest() throws Exception
     {
         ComposedPizza composedPizza = new ComposedPizza(Stream.of(new Addon("Sample", 3L), new Addon("Sample_two", 2L)).collect(Collectors.toList()));
