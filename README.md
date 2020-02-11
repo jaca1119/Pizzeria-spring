@@ -1,5 +1,5 @@
 # Pizzeria-spring
-Backend for [Pizzeria-react](https://github.com/jaca1119/Pizzeria-react)\
+Backend for [Pizzeria-react](https://github.com/jaca1119/Pizzeria-react)
 ### Software development assumptions
 TDD and best programming practices
 
@@ -19,6 +19,6 @@ TDD and best programming practices
 
 ## Future development
 
-- - [ ] Spring Security
-  - - [ ] Login
-  - - [ ] Disable some endpoints to user
+- [ ] Spring Security
+  - [ ] Login
+  - [ ] Disable some endpoints to user
