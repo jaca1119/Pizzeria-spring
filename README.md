@@ -1,5 +1,8 @@
 # Pizzeria-spring
-Backend for [Pizzeria-react](https://github.com/jaca1119/Pizzeria-react)
+Backend for [Pizzeria-react](https://github.com/jaca1119/Pizzeria-react)\
+### Software development assumptions
+TDD and best programming practices
+
 ### Online web-site. [Demo](https://goofy-hugle-5739c9.netlify.com/) (**under development**)
 # Functionalities
 - Store all standard things like: add-ons, standard pizza from menu, etc, in Postgres DB
@@ -13,3 +16,9 @@ Backend for [Pizzeria-react](https://github.com/jaca1119/Pizzeria-react)
 - Spring Boot
 - Spring Web
 - Spring Data JPA
+
+## Future development
+
+- - [ ] Spring Security
+  - - [ ] Login
+  - - [ ] Disable some endpoints to user
