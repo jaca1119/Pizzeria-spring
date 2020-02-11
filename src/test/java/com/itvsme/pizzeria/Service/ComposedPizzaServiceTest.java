@@ -2,7 +2,10 @@ package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.ComposedPizza;
+import com.itvsme.pizzeria.Model.OrderPizza;
+import com.itvsme.pizzeria.Model.StandardPizza;
 import com.itvsme.pizzeria.Repository.ComposedPizzaRepository;
+import com.itvsme.pizzeria.Repository.OrderPizzaRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +26,9 @@ public class ComposedPizzaServiceTest
     @Autowired
     private ComposedPizzaRepository repository;
 
+    @Autowired
+    private OrderPizzaRepository orderPizzaRepository;
+
     @AfterEach
     void tearDown()
     {
@@ -38,13 +44,12 @@ public class ComposedPizzaServiceTest
     @Test
     void saveComposedPizzaTest()
     {
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
         Addon onion = new Addon("onion", 3L);
         Addon pepper = new Addon("pepper", 3L);
         ComposedPizza composedPizza = new ComposedPizza(Stream.of(onion, pepper).collect(Collectors.toList()));
 
-        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository);
-
-        ComposedPizza saved = composedPizzaService.save(composedPizza);
+        ComposedPizza saved = composedPizzaService.saveComposedPizza(composedPizza);
 
         assertEquals(1, repository.count());
         assertEquals(composedPizza, saved);
@@ -54,6 +59,7 @@ public class ComposedPizzaServiceTest
     @Transactional
     void findAllComposedPizzas()
     {
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
         List<ComposedPizza> composedPizzas = new ArrayList<>();
         Addon onion = new Addon("onion", 3L);
         Addon pepper = new Addon("pepper", 3L);
@@ -63,16 +69,75 @@ public class ComposedPizzaServiceTest
         Addon sample = new Addon("sample", 3L);
         ComposedPizza sampleComposedPizza = new ComposedPizza(Stream.of(mice, sample).collect(Collectors.toList()));
 
-        repository.save(sampleComposed);
-        repository.save(sampleComposedPizza);
+        composedPizzaService.saveComposedPizza(sampleComposed);
+        composedPizzaService.saveComposedPizza(sampleComposedPizza);
 
         composedPizzas.add(sampleComposed);
         composedPizzas.add(sampleComposedPizza);
 
-        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository);
-
-        List<ComposedPizza> composedPizzaList = composedPizzaService.findAll();
+        List<ComposedPizza> composedPizzaList = composedPizzaService.findAllComposedPizza();
 
         assertArrayEquals(composedPizzas.toArray(), composedPizzaList.toArray());
+    }
+
+    @Test
+    @Transactional
+    void saveComposedPizzaOrderTest()
+    {
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
+        Addon onion = new Addon("onion", 3L);
+        Addon pepper = new Addon("pepper", 3L);
+        ComposedPizza sampleComposed = new ComposedPizza(Stream.of(onion, pepper).collect(Collectors.toList()));
+
+        OrderPizza orderPizza = new OrderPizza("Customer name", "Customer surname", "phonenumber", sampleComposed);
+
+        OrderPizza saved = composedPizzaService.saveOrder(orderPizza);
+
+        assertEquals(orderPizza.getCustomerName(), saved.getCustomerName());
+        assertEquals(orderPizza.getCustomerSurname(), saved.getCustomerSurname());
+        assertEquals(orderPizza.getPhoneNumber(), saved.getPhoneNumber());
+        assertEquals(orderPizza.getOrderedPizza(), saved.getOrderedPizza());
+    }
+
+    @Test
+    @Transactional
+    void saveStandardPizzaOrderTest()
+    {
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
+        Addon onion = new Addon("onion", 3L);
+        Addon pepper = new Addon("pepper", 3L);
+        StandardPizza sampleComposed = new StandardPizza("sample", Stream.of(onion, pepper).collect(Collectors.toList()));
+
+        OrderPizza orderPizza = new OrderPizza("Customer name", "Customer surname", "phonenumber", sampleComposed);
+
+        OrderPizza saved = composedPizzaService.saveOrder(orderPizza);
+
+        assertEquals(orderPizza.getCustomerName(), saved.getCustomerName());
+        assertEquals(orderPizza.getCustomerSurname(), saved.getCustomerSurname());
+        assertEquals(orderPizza.getPhoneNumber(), saved.getPhoneNumber());
+        assertEquals(orderPizza.getOrderedPizza(), saved.getOrderedPizza());
+    }
+
+    @Test
+    void findAllOrderPizzaTest()
+    {
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
+        Addon onion = new Addon("onion", 3L);
+        Addon pepper = new Addon("pepper", 3L);
+        Addon ham = new Addon("ham", 3L);
+        StandardPizza sampleComposed = new StandardPizza("sample", Stream.of(onion, pepper).collect(Collectors.toList()));
+        ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion, pepper, ham).collect(Collectors.toList()));
+
+        OrderPizza orderPizza = new OrderPizza("Customer name", "Customer surname", "phonenumber", sampleComposed);
+        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", secondComposed);
+
+        composedPizzaService.saveOrder(orderPizza);
+        composedPizzaService.saveOrder(sampleOrder);
+
+        List<OrderPizza> allOrderPizza = composedPizzaService.findAllOrderPizza();
+
+        assertEquals(orderPizzaRepository.count(), 2);
+        assertEquals(orderPizza.getOrderedPizza(), allOrderPizza.get(0).getOrderedPizza());
+        assertEquals(sampleOrder.getOrderedPizza(), allOrderPizza.get(1).getOrderedPizza());
     }
 }

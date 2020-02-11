@@ -2,6 +2,7 @@ package com.itvsme.pizzeria.Controller;
 
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.ComposedPizza;
+import com.itvsme.pizzeria.Model.OrderPizza;
 import com.itvsme.pizzeria.Model.StandardPizza;
 import com.itvsme.pizzeria.Service.AddonsService;
 import com.itvsme.pizzeria.Service.ComposedPizzaService;
@@ -41,6 +42,18 @@ public class PizzeriaController
         return new ResponseEntity<>(addonsService.findById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/standard")
+    public ResponseEntity<List<StandardPizza>> getAllStandardPizzas()
+    {
+        return new ResponseEntity<>(standardPizzaService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderPizza>> getAllOrderPizzas()
+    {
+        return new ResponseEntity<>(composedPizzaService.findAllOrderPizza(), HttpStatus.OK);
+    }
+
     @PostMapping("/addons")
     public ResponseEntity<Addon> createAddon(@RequestBody Addon addon)
     {
@@ -50,19 +63,19 @@ public class PizzeriaController
     @PostMapping("/composed")
     public ResponseEntity<ComposedPizza> createComposedPizza(@RequestBody ComposedPizza pizza)
     {
-        return new ResponseEntity<>(composedPizzaService.save(pizza), HttpStatus.CREATED);
-    }
-
-    @GetMapping("/standard")
-    public ResponseEntity<List<StandardPizza>> getAllStandardPizzas()
-    {
-        return new ResponseEntity<>(standardPizzaService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(composedPizzaService.saveComposedPizza(pizza), HttpStatus.CREATED);
     }
 
     @PostMapping("/standard")
     public ResponseEntity<StandardPizza> saveStandardPizza(@RequestBody StandardPizza standardPizza)
     {
         return new ResponseEntity<>(standardPizzaService.save(standardPizza), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/orders")
+    public ResponseEntity<OrderPizza> createOrderPizza(@RequestBody OrderPizza orderPizza)
+    {
+        return new ResponseEntity<>(composedPizzaService.saveOrder(orderPizza), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/addons/{id}")
