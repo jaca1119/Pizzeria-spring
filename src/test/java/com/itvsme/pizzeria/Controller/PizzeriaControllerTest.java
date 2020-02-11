@@ -162,4 +162,13 @@ public class PizzeriaControllerTest
                         .accept(MediaType.APPLICATION_JSON)
                         ).andExpect(status().isOk());
     }
+
+    @Test
+    void deleteByIdStandardPizza() throws Exception
+    {
+        mockMvc.perform(delete("/standard/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk());
+    }
 }

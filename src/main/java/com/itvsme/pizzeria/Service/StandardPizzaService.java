@@ -46,4 +46,8 @@ public class StandardPizzaService
         return standardPizzaRepository.save(standardPizza);
     }
 
+    public void deleteById(int id)
+    {
+        standardPizzaRepository.deleteById(id);
+    }
 }

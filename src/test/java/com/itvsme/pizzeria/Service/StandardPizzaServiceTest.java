@@ -94,4 +94,22 @@ class StandardPizzaServiceTest
 
         assertArrayEquals(standardPizzaList.toArray(), standardPizzas.toArray());
     }
+
+    @Test
+    void deleteStandardPizzaById()
+    {
+        List<StandardPizza> standardPizzaList = new ArrayList<>();
+        Addon onion = new Addon("onion", 3L);
+        Addon pepper = new Addon("pepper", 3L);
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+
+        repository.save(margherita);
+
+        StandardPizzaService standardPizzaService = new StandardPizzaService(repository, addonRepository);
+
+        standardPizzaService.deleteById(margherita.getId());
+        System.out.println(margherita.getId());
+
+        assertEquals(repository.count(), 0);
+    }
 }
