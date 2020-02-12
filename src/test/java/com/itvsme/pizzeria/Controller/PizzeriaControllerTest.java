@@ -218,6 +218,7 @@ public class PizzeriaControllerTest
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(sampleOrderJson)
                 ).andExpect(status().isCreated())
+                .andDo(print())
                 .andReturn();
 
         assertThat(sampleOrderJson).isEqualToIgnoringWhitespace(mvcResult.getResponse().getContentAsString());

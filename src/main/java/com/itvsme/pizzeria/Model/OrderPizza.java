@@ -18,8 +18,9 @@ public class OrderPizza
     private String customerName;
     private String customerSurname;
     private String phoneNumber;
+
     @OneToOne(cascade = CascadeType.PERSIST)
-    @MapsId
+    @JoinColumn(name = "id")
     private ComposedPizza orderedPizza;
 
 

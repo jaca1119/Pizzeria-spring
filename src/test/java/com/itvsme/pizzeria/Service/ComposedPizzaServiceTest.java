@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +55,6 @@ public class ComposedPizzaServiceTest
     }
 
     @Test
-    @Transactional
     void findAllComposedPizzas()
     {
         ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
@@ -81,7 +79,6 @@ public class ComposedPizzaServiceTest
     }
 
     @Test
-    @Transactional
     void saveComposedPizzaOrderTest()
     {
         ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
@@ -100,7 +97,6 @@ public class ComposedPizzaServiceTest
     }
 
     @Test
-    @Transactional
     void saveStandardPizzaOrderTest()
     {
         ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
