@@ -12,7 +12,7 @@ import java.util.List;
 public class ComposedPizza
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     protected Integer id;
 
     @ManyToMany(cascade = CascadeType.PERSIST)

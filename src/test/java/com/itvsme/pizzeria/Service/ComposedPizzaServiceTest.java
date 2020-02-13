@@ -4,14 +4,16 @@ import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.ComposedPizza;
 import com.itvsme.pizzeria.Model.OrderPizza;
 import com.itvsme.pizzeria.Model.StandardPizza;
+import com.itvsme.pizzeria.Repository.AddonRepository;
 import com.itvsme.pizzeria.Repository.ComposedPizzaRepository;
 import com.itvsme.pizzeria.Repository.OrderPizzaRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,45 +21,55 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@SpringBootTest
 public class ComposedPizzaServiceTest
 {
     @Autowired
-    private ComposedPizzaRepository repository;
+    private ComposedPizzaRepository composedPizzaRepository;
 
     @Autowired
     private OrderPizzaRepository orderPizzaRepository;
 
+    @Autowired
+    private AddonRepository addonRepository;
+
     @AfterEach
     void tearDown()
     {
-        repository.deleteAll();
+        composedPizzaRepository.deleteAll();
+        orderPizzaRepository.deleteAll();
+        addonRepository.deleteAll();
     }
 
     @BeforeEach
     void setUp()
     {
-        repository.deleteAll();
+        composedPizzaRepository.deleteAll();
+        orderPizzaRepository.deleteAll();
+        addonRepository.deleteAll();
     }
 
     @Test
+    @Transactional
     void saveComposedPizzaTest()
     {
-        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderPizzaRepository, addonRepository);
         Addon onion = new Addon("onion", 3L);
         Addon pepper = new Addon("pepper", 3L);
         ComposedPizza composedPizza = new ComposedPizza(Stream.of(onion, pepper).collect(Collectors.toList()));
 
         ComposedPizza saved = composedPizzaService.saveComposedPizza(composedPizza);
 
-        assertEquals(1, repository.count());
+        assertEquals(1, composedPizzaRepository.count());
         assertEquals(composedPizza, saved);
     }
 
     @Test
+    @Transactional
     void findAllComposedPizzas()
     {
-        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderPizzaRepository, addonRepository);
+
         List<ComposedPizza> composedPizzas = new ArrayList<>();
         Addon onion = new Addon("onion", 3L);
         Addon pepper = new Addon("pepper", 3L);
@@ -81,7 +93,8 @@ public class ComposedPizzaServiceTest
     @Test
     void saveComposedPizzaOrderTest()
     {
-        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderPizzaRepository, addonRepository);
+
         Addon onion = new Addon("onion", 3L);
         Addon pepper = new Addon("pepper", 3L);
         ComposedPizza sampleComposed = new ComposedPizza(Stream.of(onion, pepper).collect(Collectors.toList()));
@@ -99,7 +112,8 @@ public class ComposedPizzaServiceTest
     @Test
     void saveStandardPizzaOrderTest()
     {
-        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderPizzaRepository, addonRepository);
+
         Addon onion = new Addon("onion", 3L);
         Addon pepper = new Addon("pepper", 3L);
         StandardPizza sampleComposed = new StandardPizza("sample", Stream.of(onion, pepper).collect(Collectors.toList()));
@@ -115,9 +129,11 @@ public class ComposedPizzaServiceTest
     }
 
     @Test
+    @Transactional
     void findAllOrderPizzaTest()
     {
-        ComposedPizzaService composedPizzaService = new ComposedPizzaService(repository, orderPizzaRepository);
+        ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderPizzaRepository, addonRepository);
+
         Addon onion = new Addon("onion", 3L);
         Addon pepper = new Addon("pepper", 3L);
         Addon ham = new Addon("ham", 3L);
@@ -132,7 +148,7 @@ public class ComposedPizzaServiceTest
 
         List<OrderPizza> allOrderPizza = composedPizzaService.findAllOrderPizza();
 
-        assertEquals(orderPizzaRepository.count(), 2);
+        assertEquals(2, orderPizzaRepository.count());
         assertEquals(orderPizza.getOrderedPizza(), allOrderPizza.get(0).getOrderedPizza());
         assertEquals(sampleOrder.getOrderedPizza(), allOrderPizza.get(1).getOrderedPizza());
     }

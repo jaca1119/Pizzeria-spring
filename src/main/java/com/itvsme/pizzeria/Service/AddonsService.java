@@ -2,6 +2,7 @@ package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Repository.AddonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class AddonsService
 {
     private AddonRepository addonRepository;
 
+    @Autowired
     public AddonsService(AddonRepository addonRepository)
     {
         this.addonRepository = addonRepository;
