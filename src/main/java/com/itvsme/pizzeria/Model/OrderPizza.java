@@ -20,7 +20,7 @@ public class OrderPizza
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id")
+    @MapsId
     private ComposedPizza orderedPizza;
 
 
