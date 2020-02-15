@@ -2,10 +2,7 @@ package com.itvsme.pizzeria.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itvsme.pizzeria.Model.Addon;
-import com.itvsme.pizzeria.Model.ComposedPizza;
-import com.itvsme.pizzeria.Model.OrderPizza;
-import com.itvsme.pizzeria.Model.StandardPizza;
+import com.itvsme.pizzeria.Model.*;
 import com.itvsme.pizzeria.Service.AddonsService;
 import com.itvsme.pizzeria.Service.ComposedPizzaService;
 import com.itvsme.pizzeria.Service.StandardPizzaService;
@@ -218,6 +215,29 @@ public class PizzeriaControllerTest
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(sampleOrderJson)
                 ).andExpect(status().isCreated())
+                .andDo(print())
+                .andReturn();
+
+        assertThat(sampleOrderJson).isEqualToIgnoringWhitespace(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    void addOrderPizzaWithInputAddon() throws Exception
+    {
+        AddonInput onion = new AddonInput("onion", 3L, 2);
+
+        ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion).collect(Collectors.toList()));
+
+        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", secondComposed);
+
+        when(composedPizzaService.saveOrder(any(OrderPizza.class))).thenReturn(sampleOrder);
+
+        String sampleOrderJson = objectMapper.writeValueAsString(sampleOrder);
+
+        MvcResult mvcResult = mockMvc.perform(post("/orders")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(sampleOrderJson)
+        ).andExpect(status().isCreated())
                 .andDo(print())
                 .andReturn();
 

@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Addon
 {
     @Id
