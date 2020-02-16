@@ -20,7 +20,7 @@ public class OrderPizza
     private String customerSurname;
     private String phoneNumber;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "orderPizza_id")
     private Set<AddonInput> addonInputs;
 
