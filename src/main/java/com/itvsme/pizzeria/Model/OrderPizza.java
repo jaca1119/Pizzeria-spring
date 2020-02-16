@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter @Setter
@@ -19,16 +20,15 @@ public class OrderPizza
     private String customerSurname;
     private String phoneNumber;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @MapsId
-    private ComposedPizza orderedPizza;
+    @OneToMany
+    @JoinColumn(name = "orderPizza_id")
+    private Set<AddonInput> addonInputs;
 
-
-    public OrderPizza(String customer_name, String customer_surname, String phoneNumber, ComposedPizza orderedPizza)
+    public OrderPizza(String customerName, String customerSurname, String phoneNumber, Set<AddonInput> addonInputs)
     {
-        this.customerName = customer_name;
-        this.customerSurname = customer_surname;
+        this.customerName = customerName;
+        this.customerSurname = customerSurname;
         this.phoneNumber = phoneNumber;
-        this.orderedPizza = orderedPizza;
+        this.addonInputs = addonInputs;
     }
 }

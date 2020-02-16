@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
@@ -22,5 +23,21 @@ public class Addon
     {
         this.name = name;
         this.price = price;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Addon addon = (Addon) o;
+        return Float.compare(addon.price, price) == 0 &&
+                name.equals(addon.name);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(name, price);
     }
 }

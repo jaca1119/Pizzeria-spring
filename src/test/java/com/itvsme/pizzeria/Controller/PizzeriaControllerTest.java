@@ -176,15 +176,16 @@ public class PizzeriaControllerTest
     {
         List<OrderPizza> allOrderPizza = new ArrayList<>();
 
-        Addon onion = new Addon("onion", 3L);
-        Addon pepper = new Addon("pepper", 3L);
-        Addon ham = new Addon("ham", 3L);
+        AddonInput onion = new AddonInput("onion", 3L, 2);
+        AddonInput pepper = new AddonInput("pepper", 3L, 1);
+        AddonInput ham = new AddonInput("ham", 3L, 2);
 
         StandardPizza sampleComposed = new StandardPizza("sample", Stream.of(onion, pepper).collect(Collectors.toList()));
         ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion, pepper, ham).collect(Collectors.toList()));
 
-        OrderPizza orderPizza = new OrderPizza("Customer name", "Customer surname", "phonenumber", sampleComposed);
-        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", secondComposed);
+        OrderPizza orderPizza = new OrderPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
+
 
         allOrderPizza.addAll(Stream.of(orderPizza, sampleOrder).collect(Collectors.toList()));
 
@@ -199,13 +200,13 @@ public class PizzeriaControllerTest
     @Test
     void addOrderPizza() throws Exception
     {
-        Addon onion = new Addon("onion", 3L);
-        Addon pepper = new Addon("pepper", 3L);
-        Addon ham = new Addon("ham", 3L);
+        AddonInput onion = new AddonInput("onion", 3L, 2);
+        AddonInput pepper = new AddonInput("pepper", 3L, 1);
+        AddonInput ham = new AddonInput("ham", 3L, 2);
 
         ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion, pepper, ham).collect(Collectors.toList()));
 
-        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", secondComposed);
+        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
 
         when(composedPizzaService.saveOrder(any(OrderPizza.class))).thenReturn(sampleOrder);
 
@@ -228,7 +229,7 @@ public class PizzeriaControllerTest
 
         ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion).collect(Collectors.toList()));
 
-        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", secondComposed);
+        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion).collect(Collectors.toSet()));
 
         when(composedPizzaService.saveOrder(any(OrderPizza.class))).thenReturn(sampleOrder);
 
