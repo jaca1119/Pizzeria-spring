@@ -1,6 +1,7 @@
 package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.Addon;
+import com.itvsme.pizzeria.Model.AddonInput;
 import com.itvsme.pizzeria.Model.ComposedPizza;
 import com.itvsme.pizzeria.Model.OrderPizza;
 import com.itvsme.pizzeria.Repository.AddonRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -67,16 +69,13 @@ public class ComposedPizzaService
 
     public OrderPizza saveOrder(OrderPizza orderPizza)
     {
-//        List<Addon> addonsFromInput = orderPizza.getOrderedPizza().getAddons();
-//        List<Addon> addonsOutput = new ArrayList<>();
-//
-//        addonsFromInput.forEach(addon -> {
-//            Optional<Addon> addonByName = addonRepository.findByName(addon.getName());
-//
-//            addonsOutput.add(addonByName.orElse(addon));
-//        });
-//
-//        orderPizza.getOrderedPizza().setAddons(addonsOutput);
+        Set<AddonInput> addonsFromInput = orderPizza.getAddonInputs();
+
+        addonsFromInput.forEach(addon -> {
+            Optional<Addon> addonByName = addonRepository.findByName(addon.getAddon().getName());
+
+            addon.setAddon(addonByName.orElse(addon.getAddon()));
+        });
 
         return orderPizzaRepository.save(orderPizza);
     }

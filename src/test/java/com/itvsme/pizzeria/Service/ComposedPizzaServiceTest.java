@@ -128,8 +128,8 @@ public class ComposedPizzaServiceTest
         Addon onionStandard = new Addon("onion", 3L);
         Addon pepperStandard = new Addon("pepper", 3L);
         Addon miceStandard = new Addon("mice", 3L);
-        AddonInput onion = new AddonInput(onionStandard, 1);
-        AddonInput pepper = new AddonInput(pepperStandard, 2);
+        AddonInput onion = new AddonInput(new Addon("onion", 3L), 1);
+        AddonInput pepper = new AddonInput(new Addon("pepper", 3L), 2);
 
         StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onionStandard, pepperStandard, miceStandard).collect(Collectors.toList()));
 

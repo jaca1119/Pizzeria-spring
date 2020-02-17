@@ -18,8 +18,9 @@ public class AddonInput
 
     private int amount;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "addon_id", nullable = false)
+
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "addon_id")
     private Addon addon;
 
     public AddonInput(Addon addon, int amount)
