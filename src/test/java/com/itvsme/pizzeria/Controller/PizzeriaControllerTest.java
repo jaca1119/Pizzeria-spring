@@ -180,9 +180,6 @@ public class PizzeriaControllerTest
         AddonInput pepper = new AddonInput("pepper", 3L, 1);
         AddonInput ham = new AddonInput("ham", 3L, 2);
 
-        StandardPizza sampleComposed = new StandardPizza("sample", Stream.of(onion, pepper).collect(Collectors.toList()));
-        ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion, pepper, ham).collect(Collectors.toList()));
-
         OrderPizza orderPizza = new OrderPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onion, pepper).collect(Collectors.toSet()));
         OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
 
@@ -204,7 +201,6 @@ public class PizzeriaControllerTest
         AddonInput pepper = new AddonInput("pepper", 3L, 1);
         AddonInput ham = new AddonInput("ham", 3L, 2);
 
-        ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion, pepper, ham).collect(Collectors.toList()));
 
         OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
 
@@ -227,7 +223,6 @@ public class PizzeriaControllerTest
     {
         AddonInput onion = new AddonInput("onion", 3L, 2);
 
-        ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion).collect(Collectors.toList()));
 
         OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion).collect(Collectors.toSet()));
 

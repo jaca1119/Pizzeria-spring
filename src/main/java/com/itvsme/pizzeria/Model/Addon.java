@@ -9,11 +9,10 @@ import java.util.Objects;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Addon
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     private String name;
@@ -31,13 +30,22 @@ public class Addon
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Addon addon = (Addon) o;
-        return Float.compare(addon.price, price) == 0 &&
-                name.equals(addon.name);
+        return name.equals(addon.name);
     }
 
     @Override
     public int hashCode()
     {
         return Objects.hash(name, price);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Addon{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

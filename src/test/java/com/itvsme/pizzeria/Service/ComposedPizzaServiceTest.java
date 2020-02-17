@@ -1,10 +1,7 @@
 package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.*;
-import com.itvsme.pizzeria.Repository.AddonRepository;
-import com.itvsme.pizzeria.Repository.ComposedPizzaRepository;
-import com.itvsme.pizzeria.Repository.OrderPizzaRepository;
-import com.itvsme.pizzeria.Repository.StandardPizzaRepository;
+import com.itvsme.pizzeria.Repository.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,12 +35,16 @@ public class ComposedPizzaServiceTest
     @Autowired
     private AddonRepository addonRepository;
 
+    @Autowired
+    private AddonInputRepository addonInputRepository;
+
     @AfterEach
     void tearDown()
     {
         composedPizzaRepository.deleteAll();
         orderPizzaRepository.deleteAll();
         addonRepository.deleteAll();
+        addonInputRepository.deleteAll();
     }
 
     @BeforeEach
@@ -119,18 +121,17 @@ public class ComposedPizzaServiceTest
 
 
     @Test
-    void saveWithItemsInRepoComposedPizzaOrderTest()
+    void saveOrderPizzaWithStandardPizza()
     {
-        //Given
         ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderPizzaRepository, addonRepository);
-        AddonInput onion = new AddonInput("onion", 3L, 1);
-        AddonInput pepper = new AddonInput("pepper", 3L, 2);
+
         Addon onionStandard = new Addon("onion", 3L);
         Addon pepperStandard = new Addon("pepper", 3L);
         Addon miceStandard = new Addon("mice", 3L);
+        AddonInput onion = new AddonInput(onionStandard, 1);
+        AddonInput pepper = new AddonInput(pepperStandard, 2);
 
         StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onionStandard, pepperStandard, miceStandard).collect(Collectors.toList()));
-        ComposedPizza composedPizza = new ComposedPizza(Stream.of(onion, pepper).collect(Collectors.toList()));
 
         OrderPizza orderPizza = new OrderPizza("name",
                 "surname",
@@ -138,12 +139,12 @@ public class ComposedPizzaServiceTest
                 Stream.of(onion, pepper).collect(Collectors.toSet()));
 
         StandardPizza savedStandard = standardPizzaRepository.save(margherita);
+
+        addonRepository.findAll().spliterator().forEachRemaining(System.out::println);
         OrderPizza saved = composedPizzaService.saveOrder(orderPizza);
 
-        //TEST
-        long size = orderPizzaRepository.findAll().spliterator().estimateSize();
-        assertEquals(1, size);
-        assertThat(orderPizza.getAddonInputs()).containsExactlyInAnyOrder(saved.getAddonInputs().toArray(AddonInput[]::new));
+        assertThat(addonRepository.count()).isEqualTo(3);
+        assertThat(addonInputRepository.count()).isEqualTo(2);
     }
 
     @Test
@@ -152,14 +153,19 @@ public class ComposedPizzaServiceTest
     {
         ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderPizzaRepository, addonRepository);
 
-        AddonInput onion = new AddonInput("onion", 3L, 2);
-        AddonInput pepper = new AddonInput("pepper", 3L, 1);
-        AddonInput ham = new AddonInput("ham", 3L, 2);
+        Addon onion = new Addon("onion", 3L);
+        Addon pepper = new Addon("pepper", 3L);
+        Addon ham = new Addon("ham", 3L);
+
+        AddonInput onionInput = new AddonInput(onion, 1);
+        AddonInput pepperInput = new AddonInput(pepper, 2);
+        AddonInput hamInput = new AddonInput(ham, 2);
+
         StandardPizza sampleComposed = new StandardPizza("sample", Stream.of(onion, pepper).collect(Collectors.toList()));
         ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion, pepper, ham).collect(Collectors.toList()));
 
-        OrderPizza orderPizza = new OrderPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onion, pepper).collect(Collectors.toSet()));
-        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
+        OrderPizza orderPizza = new OrderPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onionInput, pepperInput).collect(Collectors.toSet()));
+        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onionInput, pepperInput, hamInput).collect(Collectors.toSet()));
 
         composedPizzaService.saveOrder(orderPizza);
         composedPizzaService.saveOrder(sampleOrder);
@@ -168,6 +174,6 @@ public class ComposedPizzaServiceTest
 
         assertEquals(2, orderPizzaRepository.count());
         assertThat(orderPizza.getAddonInputs()).containsExactlyInAnyOrder(allOrderPizza.get(0).getAddonInputs().toArray(AddonInput[]::new));
-        assertThat(orderPizza.getAddonInputs()).containsExactlyInAnyOrder(allOrderPizza.get(1).getAddonInputs().toArray(AddonInput[]::new));
+        assertThat(sampleOrder.getAddonInputs()).containsExactlyInAnyOrder(allOrderPizza.get(1).getAddonInputs().toArray(AddonInput[]::new));
     }
 }
