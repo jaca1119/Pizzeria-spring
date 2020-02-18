@@ -1,9 +1,6 @@
 package com.itvsme.pizzeria.Controller;
 
-import com.itvsme.pizzeria.Model.Addon;
-import com.itvsme.pizzeria.Model.ComposedPizza;
-import com.itvsme.pizzeria.Model.OrderPizza;
-import com.itvsme.pizzeria.Model.StandardPizza;
+import com.itvsme.pizzeria.Model.*;
 import com.itvsme.pizzeria.Service.AddonsService;
 import com.itvsme.pizzeria.Service.ComposedPizzaService;
 import com.itvsme.pizzeria.Service.StandardPizzaService;
@@ -54,6 +51,12 @@ public class PizzeriaController
         return new ResponseEntity<>(composedPizzaService.findAllOrderPizza(), HttpStatus.OK);
     }
 
+    @GetMapping("/ordersStandard")
+    public ResponseEntity<List<OrderStandardPizza>> getAllOrderStandardPizzas()
+    {
+        return new ResponseEntity<>(standardPizzaService.findAllOrdersStandard(), HttpStatus.OK);
+    }
+
     @PostMapping("/addons")
     public ResponseEntity<Addon> createAddon(@RequestBody Addon addon)
     {
@@ -76,6 +79,12 @@ public class PizzeriaController
     public ResponseEntity<OrderPizza> createOrderPizza(@RequestBody OrderPizza orderPizza)
     {
         return new ResponseEntity<>(composedPizzaService.saveOrder(orderPizza), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/ordersStandard")
+    public ResponseEntity<OrderStandardPizza> createOrderStandardPizza(@RequestBody OrderStandardPizza orderPizza)
+    {
+        return new ResponseEntity<>(standardPizzaService.saveOrderStandardPizza(orderPizza), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/addons/{id}")

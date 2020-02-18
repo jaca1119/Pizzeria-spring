@@ -6,6 +6,7 @@ import com.itvsme.pizzeria.Model.*;
 import com.itvsme.pizzeria.Service.AddonsService;
 import com.itvsme.pizzeria.Service.ComposedPizzaService;
 import com.itvsme.pizzeria.Service.StandardPizzaService;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -174,7 +175,6 @@ public class PizzeriaControllerTest
     @Test
     void findAllOrderPizza() throws Exception
     {
-        List<OrderPizza> allOrderPizza = new ArrayList<>();
 
         AddonInput onion = new AddonInput("onion", 3L, 2);
         AddonInput pepper = new AddonInput("pepper", 3L, 1);
@@ -184,7 +184,7 @@ public class PizzeriaControllerTest
         OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
 
 
-        allOrderPizza.addAll(Stream.of(orderPizza, sampleOrder).collect(Collectors.toList()));
+        List<OrderPizza> allOrderPizza = Stream.of(orderPizza, sampleOrder).collect(Collectors.toList());
 
         when(composedPizzaService.findAllOrderPizza()).thenReturn(allOrderPizza);
 
@@ -223,7 +223,6 @@ public class PizzeriaControllerTest
     {
         AddonInput onion = new AddonInput("onion", 3L, 2);
 
-
         OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion).collect(Collectors.toSet()));
 
         when(composedPizzaService.saveOrder(any(OrderPizza.class))).thenReturn(sampleOrder);
@@ -238,5 +237,53 @@ public class PizzeriaControllerTest
                 .andReturn();
 
         assertThat(sampleOrderJson).isEqualToIgnoringWhitespace(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    void addOrderStandardPizza() throws Exception
+    {
+        Addon onion = new Addon("onion", 3L);
+        Addon pepper = new Addon("pepper", 3L);
+
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+
+        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name",
+                "surname",
+                "phone",
+                margherita);
+
+        when(standardPizzaService.saveOrderStandardPizza(any(OrderStandardPizza.class))).thenReturn(orderStandardPizza);
+
+        String orderJson = objectMapper.writeValueAsString(orderStandardPizza);
+
+        MvcResult mvcResult = mockMvc.perform(post("/ordersStandard")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(orderJson)
+        ).andExpect(status().isCreated())
+                .andDo(print())
+                .andReturn();
+
+        assertThat(orderJson).isEqualToIgnoringWhitespace(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    void getAllOrderStandard() throws Exception
+    {
+        Addon onion = new Addon("onion", 3L);
+        Addon pepper = new Addon("pepper", 3L);
+
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toList()));
+
+        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name", "surname", "phone", margherita);
+        OrderStandardPizza sample = new OrderStandardPizza("sample", "sample", "123", samplePizza);
+
+        when(standardPizzaService.findAllOrdersStandard()).thenReturn(Lists.list(orderStandardPizza, sample));
+
+        mockMvc.perform(get("/ordersStandard")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andDo(print());
     }
 }
