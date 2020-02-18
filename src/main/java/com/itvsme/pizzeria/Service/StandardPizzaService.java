@@ -21,19 +21,18 @@ public class StandardPizzaService
     private AddonRepository addonRepository;
     private OrderStandardPizzaRepository orderStandardPizzaRepository;
 
-
     @Autowired
-    public StandardPizzaService(StandardPizzaRepository standardPizzaRepository, AddonRepository addonRepository)
-    {
-        this.standardPizzaRepository = standardPizzaRepository;
-        this.addonRepository = addonRepository;
-    }
-
     public StandardPizzaService(StandardPizzaRepository standardPizzaRepository, AddonRepository addonRepository, OrderStandardPizzaRepository orderStandardPizzaRepository)
     {
         this.standardPizzaRepository = standardPizzaRepository;
         this.addonRepository = addonRepository;
         this.orderStandardPizzaRepository = orderStandardPizzaRepository;
+    }
+
+    public StandardPizzaService(StandardPizzaRepository standardPizzaRepository, AddonRepository addonRepository)
+    {
+        this.standardPizzaRepository = standardPizzaRepository;
+        this.addonRepository = addonRepository;
     }
 
     public List<StandardPizza> findAll()

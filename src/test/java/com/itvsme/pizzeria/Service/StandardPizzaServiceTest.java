@@ -136,4 +136,21 @@ class StandardPizzaServiceTest
         assertEquals(repository.count(), 1);
         assertEquals(addonRepository.count(), 2);
     }
+
+    @Test
+    void findAllOrderStandardPizza()
+    {
+        StandardPizzaService standardPizzaService = new StandardPizzaService(repository, addonRepository, orderStandardPizzaRepository);
+
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toList()));
+
+        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name", "surname", "phone", margherita);
+        OrderStandardPizza sample = new OrderStandardPizza("sample", "sample", "123", samplePizza);
+
+        standardPizzaService.saveOrderStandardPizza(orderStandardPizza);
+        standardPizzaService.saveOrderStandardPizza(sample);
+
+        assertEquals(standardPizzaService.findAllOrdersStandard().size(), 2);
+    }
 }
