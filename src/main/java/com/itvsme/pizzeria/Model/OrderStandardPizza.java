@@ -21,7 +21,6 @@ public class OrderStandardPizza extends OrderPizza
 
     public OrderStandardPizza(String name, String surname, String phone, StandardPizza standardPizza)
     {
-
         this.name = name;
         this.surname = surname;
         this.phone = phone;

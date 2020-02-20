@@ -7,6 +7,7 @@ import com.itvsme.pizzeria.Service.AddonsService;
 import com.itvsme.pizzeria.Service.ComposedPizzaService;
 import com.itvsme.pizzeria.Service.StandardPizzaService;
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,24 @@ public class PizzeriaControllerTest
     private OrderPizzaRepository orderpizzaRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    private Addon onion;
+    private Addon pepper;
+    private Addon mice;
+    private AddonInput onionInput;
+    private AddonInput pepperInput;
+    private AddonInput miceInput;
+
+    @BeforeEach
+    void setUp()
+    {
+        onion = new Addon("onion", 3L);
+        pepper = new Addon("pepper", 3L);
+        mice = new Addon("mice", 3L);
+        onionInput = new AddonInput(onion,2);
+        pepperInput = new AddonInput(pepper, 1);
+        miceInput = new AddonInput(mice, 2);
+    }
 
 
 
@@ -104,11 +123,9 @@ public class PizzeriaControllerTest
     void getAllStandardPizzas() throws Exception
     {
         List<StandardPizza> standardPizzaList = new ArrayList<>();
-        Addon[] margheritaAddons = {new Addon("onion", 3L), new Addon("pepper", 3L)};
-        Addon[] sampleAddons = {new Addon("onion", 3L), new Addon("pepper", 3L), new Addon("maize", 3L)};
 
-        standardPizzaList.add(new StandardPizza("Margherita", Arrays.asList(margheritaAddons)));
-        standardPizzaList.add(new StandardPizza("Sample", Arrays.asList(sampleAddons)));
+        standardPizzaList.add(new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet())));
+        standardPizzaList.add(new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toSet())));
 
         when(standardPizzaService.findAll()).thenReturn(standardPizzaList);
 
@@ -120,9 +137,7 @@ public class PizzeriaControllerTest
     @Test
     void saveStandardPizzaTest() throws Exception
     {
-        Addon[] margheritaAddons = {new Addon("onion", 3L), new Addon("pepper", 3L)};
-
-        StandardPizza standardPizza = new StandardPizza("Margherita", Arrays.asList(margheritaAddons));
+        StandardPizza standardPizza = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
 
         when(standardPizzaService.save(any(StandardPizza.class))).thenReturn(standardPizza);
 
@@ -143,7 +158,7 @@ public class PizzeriaControllerTest
     @Test
     void saveComposedPizzaTest() throws Exception
     {
-        ComposedPizza composedPizza = new ComposedPizza(Stream.of(new Addon("Sample", 3L), new Addon("Sample_two", 2L)).collect(Collectors.toList()));
+        ComposedPizza composedPizza = new ComposedPizza(Stream.of(onionInput, pepperInput).collect(Collectors.toSet()));
 
         when(composedPizzaService.saveComposedPizza(any(ComposedPizza.class))).thenReturn(composedPizza);
 
@@ -154,10 +169,10 @@ public class PizzeriaControllerTest
         .content(composedPizzaJson));
 
         result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.addons[0].name").value("Sample"))
-                .andExpect(jsonPath("$.addons[0].price").value(3L))
-                .andExpect(jsonPath("$.addons[1].name").value("Sample_two"))
-                .andExpect(jsonPath("$.addons[1].price").value(2L));
+                .andExpect(jsonPath("$.addonsInput[0].addon.name").value("pepper"))
+                .andExpect(jsonPath("$.addonsInput[0].addon.price").value(3L))
+                .andExpect(jsonPath("$.addonsInput[1].addon.name").value("onion"))
+                .andExpect(jsonPath("$.addonsInput[1].addon.price").value(3L));
     }
 
     @Test
@@ -181,13 +196,15 @@ public class PizzeriaControllerTest
     @Test
     void findAllOrderPizza() throws Exception
     {
+        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name",
+                "Customer surname",
+                "phonenumber",
+                new ComposedPizza(Stream.of(onionInput, pepperInput).collect(Collectors.toSet())));
 
-        AddonInput onion = new AddonInput("onion", 3L, 2);
-        AddonInput pepper = new AddonInput("pepper", 3L, 1);
-        AddonInput ham = new AddonInput("ham", 3L, 2);
-
-        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onion, pepper).collect(Collectors.toSet()));
-        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
+        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample",
+                "Customer surname sample",
+                "sample",
+                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
 
 
         List<OrderComposedPizza> allOrderComposedPizza = Stream.of(orderComposedPizza, sampleOrder).collect(Collectors.toList());
@@ -208,7 +225,10 @@ public class PizzeriaControllerTest
         AddonInput ham = new AddonInput("ham", 3L, 2);
 
 
-        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
+        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample",
+                "Customer surname sample",
+                "sample",
+                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
 
         when(composedPizzaService.saveOrder(any(OrderComposedPizza.class))).thenReturn(sampleOrder);
 
@@ -232,7 +252,10 @@ public class PizzeriaControllerTest
     {
         AddonInput onion = new AddonInput("onion", 3L, 2);
 
-        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion).collect(Collectors.toSet()));
+        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample",
+                "Customer surname sample",
+                "sample",
+                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
 
         when(composedPizzaService.saveOrder(any(OrderComposedPizza.class))).thenReturn(sampleOrder);
 
@@ -251,10 +274,7 @@ public class PizzeriaControllerTest
     @Test
     void addOrderStandardPizza() throws Exception
     {
-        Addon onion = new Addon("onion", 3L);
-        Addon pepper = new Addon("pepper", 3L);
-
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
 
         OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name",
                 "surname",
@@ -281,11 +301,8 @@ public class PizzeriaControllerTest
     @Test
     void getAllOrderStandard() throws Exception
     {
-        Addon onion = new Addon("onion", 3L);
-        Addon pepper = new Addon("pepper", 3L);
-
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
-        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toSet()));
 
         OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name", "surname", "phone", margherita);
         OrderStandardPizza sample = new OrderStandardPizza("sample", "sample", "123", samplePizza);
@@ -302,19 +319,16 @@ public class PizzeriaControllerTest
     @Test
     void getAllOrders() throws Exception
     {
-        Addon onion = new Addon("onion", 3L);
-        Addon pepper = new Addon("pepper", 3L);
-
-        AddonInput onionInput = new AddonInput(onion, 1);
-        AddonInput pepperInput = new AddonInput(pepper, 2);
-
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
-        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toSet()));
 
         OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name", "surname", "phone", margherita);
         OrderStandardPizza sample = new OrderStandardPizza("sample", "sample", "123", samplePizza);
 
-        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onionInput, pepperInput).collect(Collectors.toSet()));
+        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name",
+                "Customer surname",
+                "phonenumber",
+                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
 
 
         when(orderpizzaRepository.findAll()).thenReturn(Lists.list(orderStandardPizza, sample, orderComposedPizza));

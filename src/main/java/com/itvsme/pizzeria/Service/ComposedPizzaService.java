@@ -46,16 +46,13 @@ public class ComposedPizzaService
 
     public ComposedPizza saveComposedPizza(ComposedPizza composedPizza)
     {
-        List<Addon> addonsFromInput = composedPizza.getAddons();
-        List<Addon> addonsOutput = new ArrayList<>();
+        Set<AddonInput> addonsInput = composedPizza.getAddonsInput();
 
-        addonsFromInput.forEach(addon -> {
-            Optional<Addon> addonByName = addonRepository.findByName(addon.getName());
+        addonsInput.forEach(addonInput -> {
+            Optional<Addon> optionalAddon = addonRepository.findByName(addonInput.getAddon().getName());
 
-            addonsOutput.add(addonByName.orElse(addon));
+            addonInput.setAddon(optionalAddon.orElse(addonInput.getAddon()));
         });
-
-        composedPizza.setAddons(addonsOutput);
 
         return repository.save(composedPizza);
     }
@@ -69,14 +66,6 @@ public class ComposedPizzaService
 
     public OrderComposedPizza saveOrder(OrderComposedPizza orderComposedPizza)
     {
-        Set<AddonInput> addonsFromInput = orderComposedPizza.getAddonInputs();
-
-        addonsFromInput.forEach(addon -> {
-            Optional<Addon> addonByName = addonRepository.findByName(addon.getAddon().getName());
-
-            addon.setAddon(addonByName.orElse(addon.getAddon()));
-        });
-
         return orderComposedPizzaRepository.save(orderComposedPizza);
     }
 

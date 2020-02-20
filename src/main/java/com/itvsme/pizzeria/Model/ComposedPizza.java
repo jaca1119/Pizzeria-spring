@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
@@ -15,13 +15,14 @@ public class ComposedPizza
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    private Integer id;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    protected List<Addon> addons;
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "composed_pizza_id")
+    private Set<AddonInput> addonsInput;
 
-    public ComposedPizza(List<Addon> addons)
+    public ComposedPizza(Set<AddonInput> addonsInput)
     {
-        this.addons= addons;
+        this.addonsInput = addonsInput;
     }
 }

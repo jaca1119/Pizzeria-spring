@@ -11,8 +11,9 @@ import java.sql.Timestamp;
 
 @Entity
 @Getter @Setter
-@Inheritance(strategy = InheritanceType.JOINED)
 @ToString
+@NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class OrderPizza
 {
     @Id

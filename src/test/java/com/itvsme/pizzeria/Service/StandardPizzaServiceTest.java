@@ -62,7 +62,7 @@ class StandardPizzaServiceTest
     @Test
     void findLastStandardPizza()
     {
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
 
         repository.save(margherita);
 
@@ -76,7 +76,7 @@ class StandardPizzaServiceTest
     void saveStandardPizzaTest()
     {
 
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
 
         StandardPizza saved = standardPizzaService.save(margherita);
 
@@ -90,10 +90,10 @@ class StandardPizzaServiceTest
     {
         List<StandardPizza> standardPizzaList = new ArrayList<>();
 
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
 
 
-        StandardPizza sampleStandardPizza = new StandardPizza("Sample", Stream.of(mice, sample).collect(Collectors.toList()));
+        StandardPizza sampleStandardPizza = new StandardPizza("Sample", Stream.of(mice, sample).collect(Collectors.toSet()));
 
         repository.save(margherita);
         repository.save(sampleStandardPizza);
@@ -111,7 +111,7 @@ class StandardPizzaServiceTest
     {
         List<StandardPizza> standardPizzaList = new ArrayList<>();
 
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
 
         repository.save(margherita);
 
@@ -126,14 +126,14 @@ class StandardPizzaServiceTest
     void saveOrderStandardPizzaWithStandardPizzaInRepo()
     {
         StandardPizzaService standardPizzaService = new StandardPizzaService(repository, addonRepository, orderStandardPizzaRepository);
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
 
         OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name",
                 "surname",
                 "phone",
                 margherita);
 
-        standardPizzaService.save(new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList())));
+        standardPizzaService.save(new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet())));
         OrderStandardPizza saveOrderStandardPizza = standardPizzaService.saveOrderStandardPizza(orderStandardPizza);
 
         assertEquals(orderStandardPizza, saveOrderStandardPizza);
@@ -146,8 +146,8 @@ class StandardPizzaServiceTest
     {
         StandardPizzaService standardPizzaService = new StandardPizzaService(repository, addonRepository, orderStandardPizzaRepository);
 
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
-        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toSet()));
 
         OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name", "surname", "phone", margherita);
         OrderStandardPizza sample = new OrderStandardPizza("sample", "sample", "123", samplePizza);
@@ -164,8 +164,8 @@ class StandardPizzaServiceTest
         StandardPizzaService standardPizzaService = new StandardPizzaService(repository, addonRepository, orderStandardPizzaRepository);
 
 
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
-        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toSet()));
 
         OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name", "surname", "phone", margherita);
         OrderStandardPizza sample = new OrderStandardPizza("sample", "sample", "123", samplePizza);

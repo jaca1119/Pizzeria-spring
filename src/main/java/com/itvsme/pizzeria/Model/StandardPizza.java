@@ -6,17 +6,24 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter @Setter
 @NoArgsConstructor
 @ToString
-public class StandardPizza extends ComposedPizza
+public class StandardPizza
 {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String name;
 
-    public StandardPizza(String name, List<Addon> addons)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "standard_pizza_id")
+    private Set<Addon> addons;
+
+    public StandardPizza(String name, Set<Addon> addons)
     {
         this.name = name;
         this.addons = addons;

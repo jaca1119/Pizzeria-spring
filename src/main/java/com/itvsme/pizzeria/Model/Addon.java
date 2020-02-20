@@ -10,7 +10,6 @@ import java.util.Objects;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-@ToString
 public class Addon
 {
     @Id
@@ -32,7 +31,8 @@ public class Addon
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Addon addon = (Addon) o;
-        return name.equals(addon.name);
+        return Float.compare(addon.price, price) == 0 &&
+                name.equals(addon.name);
     }
 
     @Override

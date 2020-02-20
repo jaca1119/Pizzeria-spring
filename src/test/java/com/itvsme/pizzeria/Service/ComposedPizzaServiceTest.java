@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,10 +30,15 @@ public class ComposedPizzaServiceTest
     private AddonRepository addonRepository;
     @Autowired
     private OrderPizzaRepository orderPizzaRepository;
-
-
     @Autowired
     private AddonInputRepository addonInputRepository;
+
+    private Addon onion;
+    private Addon pepper;
+    private Addon mice;
+    private AddonInput onionInput;
+    private AddonInput pepperInput;
+    private AddonInput miceInput;
 
     @AfterEach
     void tearDown()
@@ -48,9 +52,12 @@ public class ComposedPizzaServiceTest
     @BeforeEach
     void setUp()
     {
-        composedPizzaRepository.deleteAll();
-        orderComposedPizzaRepository.deleteAll();
-        addonRepository.deleteAll();
+        onion = new Addon("onion", 3L);
+        pepper = new Addon("pepper", 3L);
+        mice = new Addon("mice", 3L);
+        onionInput = new AddonInput(onion,2);
+        pepperInput = new AddonInput(pepper, 1);
+        miceInput = new AddonInput(mice, 2);
     }
 
     @Test
@@ -58,14 +65,13 @@ public class ComposedPizzaServiceTest
     void saveComposedPizzaTest()
     {
         ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderComposedPizzaRepository, addonRepository);
-        Addon onion = new Addon("onion", 3L);
-        Addon pepper = new Addon("pepper", 3L);
-        ComposedPizza composedPizza = new ComposedPizza(Stream.of(onion, pepper).collect(Collectors.toList()));
+
+        ComposedPizza composedPizza = new ComposedPizza(Stream.of(onionInput, pepperInput).collect(Collectors.toSet()));
 
         ComposedPizza saved = composedPizzaService.saveComposedPizza(composedPizza);
 
         assertEquals(1, composedPizzaRepository.count());
-        assertThat(saved.getAddons()).containsExactly(onion, pepper);
+        assertThat(saved.getAddonsInput()).containsExactlyInAnyOrder(onionInput, pepperInput);
     }
 
     @Test
@@ -75,13 +81,12 @@ public class ComposedPizzaServiceTest
         ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderComposedPizzaRepository, addonRepository);
 
         List<ComposedPizza> composedPizzas = new ArrayList<>();
-        Addon onion = new Addon("onion", 3L);
-        Addon pepper = new Addon("pepper", 3L);
-        ComposedPizza sampleComposed = new ComposedPizza(Stream.of(onion, pepper).collect(Collectors.toList()));
 
-        Addon mice = new Addon("mice", 3L);
-        Addon sample = new Addon("sample", 3L);
-        ComposedPizza sampleComposedPizza = new ComposedPizza(Stream.of(mice, sample).collect(Collectors.toList()));
+
+        ComposedPizza sampleComposed = new ComposedPizza(Stream.of(onionInput, pepperInput).collect(Collectors.toSet()));
+
+
+        ComposedPizza sampleComposedPizza = new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet()));
 
         composedPizzaService.saveComposedPizza(sampleComposed);
         composedPizzaService.saveComposedPizza(sampleComposedPizza);
@@ -99,10 +104,7 @@ public class ComposedPizzaServiceTest
     {
         ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderComposedPizzaRepository, addonRepository);
 
-        AddonInput onion = new AddonInput("onion", 3L, 2);
-        AddonInput pepper = new AddonInput("pepper", 3L, 1);
-
-        Set<AddonInput> addonInputs = Stream.of(onion, pepper).collect(Collectors.toSet());
+        ComposedPizza addonInputs = new ComposedPizza(Stream.of(onionInput, pepperInput).collect(Collectors.toSet()));
 
         OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name",
                 "Customer surname",
@@ -114,7 +116,7 @@ public class ComposedPizzaServiceTest
         assertEquals(orderComposedPizza.getName(), saved.getName());
         assertEquals(orderComposedPizza.getSurname(), saved.getSurname());
         assertEquals(orderComposedPizza.getPhone(), saved.getPhone());
-        assertThat(orderComposedPizza.getAddonInputs()).containsExactlyInAnyOrder(saved.getAddonInputs().toArray(AddonInput[]::new));
+        assertThat(orderComposedPizza.getComposedPizza().getAddonsInput()).containsExactlyInAnyOrder(saved.getComposedPizza().getAddonsInput().toArray(AddonInput[]::new));
         assertThat(orderComposedPizza.getTimestamp()).isNotNull();
     }
 
@@ -124,18 +126,12 @@ public class ComposedPizzaServiceTest
     {
         ComposedPizzaService composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderComposedPizzaRepository, addonRepository);
 
-        Addon onionStandard = new Addon("onion", 3L);
-        Addon pepperStandard = new Addon("pepper", 3L);
-        Addon miceStandard = new Addon("mice", 3L);
-        AddonInput onion = new AddonInput(new Addon("onion", 3L), 1);
-        AddonInput pepper = new AddonInput(new Addon("pepper", 3L), 2);
-
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onionStandard, pepperStandard, miceStandard).collect(Collectors.toList()));
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper, mice).collect(Collectors.toSet()));
 
         OrderComposedPizza orderComposedPizza = new OrderComposedPizza("name",
                 "surname",
                 "phone",
-                Stream.of(onion, pepper).collect(Collectors.toSet()));
+                new ComposedPizza(Stream.of(onionInput, pepperInput).collect(Collectors.toSet())));
 
         StandardPizza savedStandard = standardPizzaRepository.save(margherita);
 
@@ -160,11 +156,16 @@ public class ComposedPizzaServiceTest
         AddonInput pepperInput = new AddonInput(pepper, 2);
         AddonInput hamInput = new AddonInput(ham, 2);
 
-        StandardPizza sampleComposed = new StandardPizza("sample", Stream.of(onion, pepper).collect(Collectors.toList()));
-        ComposedPizza secondComposed = new ComposedPizza(Stream.of(onion, pepper, ham).collect(Collectors.toList()));
 
-        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onionInput, pepperInput).collect(Collectors.toSet()));
-        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onionInput, pepperInput, hamInput).collect(Collectors.toSet()));
+        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name",
+                "Customer surname",
+                "phonenumber",
+                new ComposedPizza(Stream.of(onionInput, pepperInput).collect(Collectors.toSet())));
+
+        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample",
+                "Customer surname sample",
+                "sample",
+                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
 
         composedPizzaService.saveOrder(orderComposedPizza);
         composedPizzaService.saveOrder(sampleOrder);
@@ -172,8 +173,8 @@ public class ComposedPizzaServiceTest
         List<OrderComposedPizza> allOrderComposedPizza = composedPizzaService.findAllOrderPizza();
 
         assertEquals(2, orderComposedPizzaRepository.count());
-        assertThat(orderComposedPizza.getAddonInputs()).containsExactlyInAnyOrder(allOrderComposedPizza.get(0).getAddonInputs().toArray(AddonInput[]::new));
-        assertThat(sampleOrder.getAddonInputs()).containsExactlyInAnyOrder(allOrderComposedPizza.get(1).getAddonInputs().toArray(AddonInput[]::new));
+        assertThat(orderComposedPizza.getComposedPizza().getAddonsInput()).containsExactlyInAnyOrder(allOrderComposedPizza.get(0).getComposedPizza().getAddonsInput().toArray(AddonInput[]::new));
+        assertThat(sampleOrder.getComposedPizza().getAddonsInput()).containsExactlyInAnyOrder(allOrderComposedPizza.get(1).getComposedPizza().getAddonsInput().toArray(AddonInput[]::new));
     }
 
     @Test
@@ -187,7 +188,10 @@ public class ComposedPizzaServiceTest
         AddonInput onionInput = new AddonInput(onion, 1);
         AddonInput pepperInput = new AddonInput(pepper, 2);
 
-        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onionInput, pepperInput).collect(Collectors.toSet()));
+        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name",
+                "Customer surname",
+                "phonenumber",
+                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
 
         composedPizzaService.saveOrder(orderComposedPizza);
 

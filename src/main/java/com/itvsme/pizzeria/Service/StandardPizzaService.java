@@ -9,9 +9,7 @@ import com.itvsme.pizzeria.Repository.StandardPizzaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StandardPizzaService
@@ -44,8 +42,8 @@ public class StandardPizzaService
 
     public StandardPizza save(StandardPizza standardPizza)
     {
-        List<Addon> addonsFromInput = standardPizza.getAddons();
-        List<Addon> addonsOutput = new ArrayList<>();
+        Set<Addon> addonsFromInput = standardPizza.getAddons();
+        Set<Addon> addonsOutput = new HashSet<>();
 
         addonsFromInput.forEach(addon -> {
             Optional<Addon> addonByName = addonRepository.findByName(addon.getName());

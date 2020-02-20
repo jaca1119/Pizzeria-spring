@@ -3,10 +3,8 @@ package com.itvsme.pizzeria.Model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Getter @Setter
@@ -15,23 +13,22 @@ import java.util.Set;
 public class OrderComposedPizza extends OrderPizza
 {
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "orderPizza_id")
-    private Set<AddonInput> addonInputs;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private ComposedPizza composedPizza;
 
-    public OrderComposedPizza(String name, String surname, String phone, Set<AddonInput> addonInputs)
+    public OrderComposedPizza(String name, String surname, String phone, ComposedPizza composedPizza)
     {
         this.name = name;
         this.surname = surname;
         this.phone = phone;
-        this.addonInputs = addonInputs;
+        this.composedPizza = composedPizza;
     }
 
     @Override
     public String toString()
     {
         return "OrderComposedPizza{" +
-                "addonInputs=" + addonInputs +
+                "addonInputs=" + composedPizza +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", phone='" + phone + '\'' +
