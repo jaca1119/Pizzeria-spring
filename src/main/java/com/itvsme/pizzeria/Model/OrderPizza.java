@@ -3,32 +3,27 @@ package com.itvsme.pizzeria.Model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.sql.Timestamp;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+@ToString
 public class OrderPizza
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String customerName;
-    private String customerSurname;
-    private String phoneNumber;
+    protected String name;
+    protected String surname;
+    protected String phone;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "orderPizza_id")
-    private Set<AddonInput> addonInputs;
+    @CreationTimestamp
+    protected Timestamp timestamp;
 
-    public OrderPizza(String customerName, String customerSurname, String phoneNumber, Set<AddonInput> addonInputs)
-    {
-        this.customerName = customerName;
-        this.customerSurname = customerSurname;
-        this.phoneNumber = phoneNumber;
-        this.addonInputs = addonInputs;
-    }
 }

@@ -3,10 +3,10 @@ package com.itvsme.pizzeria.Service;
 import com.itvsme.pizzeria.Model.Addon;
 import com.itvsme.pizzeria.Model.AddonInput;
 import com.itvsme.pizzeria.Model.ComposedPizza;
-import com.itvsme.pizzeria.Model.OrderPizza;
+import com.itvsme.pizzeria.Model.OrderComposedPizza;
 import com.itvsme.pizzeria.Repository.AddonRepository;
 import com.itvsme.pizzeria.Repository.ComposedPizzaRepository;
-import com.itvsme.pizzeria.Repository.OrderPizzaRepository;
+import com.itvsme.pizzeria.Repository.OrderComposedPizzaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +20,14 @@ import java.util.Set;
 public class ComposedPizzaService
 {
     private ComposedPizzaRepository repository;
-    private OrderPizzaRepository orderPizzaRepository;
+    private OrderComposedPizzaRepository orderComposedPizzaRepository;
     private AddonRepository addonRepository;
 
     @Autowired
-    public ComposedPizzaService(ComposedPizzaRepository repository, OrderPizzaRepository orderPizzaRepository, AddonRepository addonRepository)
+    public ComposedPizzaService(ComposedPizzaRepository repository, OrderComposedPizzaRepository orderComposedPizzaRepository, AddonRepository addonRepository)
     {
         this.repository = repository;
-        this.orderPizzaRepository = orderPizzaRepository;
+        this.orderComposedPizzaRepository = orderComposedPizzaRepository;
         this.addonRepository = addonRepository;
     }
 
@@ -38,10 +38,10 @@ public class ComposedPizzaService
         this.addonRepository = addonRepository;
     }
 
-    public ComposedPizzaService(ComposedPizzaRepository repository, OrderPizzaRepository orderPizzaRepository)
+    public ComposedPizzaService(ComposedPizzaRepository repository, OrderComposedPizzaRepository orderComposedPizzaRepository)
     {
         this.repository = repository;
-        this.orderPizzaRepository = orderPizzaRepository;
+        this.orderComposedPizzaRepository = orderComposedPizzaRepository;
     }
 
     public ComposedPizza saveComposedPizza(ComposedPizza composedPizza)
@@ -67,9 +67,9 @@ public class ComposedPizzaService
         return composed;
     }
 
-    public OrderPizza saveOrder(OrderPizza orderPizza)
+    public OrderComposedPizza saveOrder(OrderComposedPizza orderComposedPizza)
     {
-        Set<AddonInput> addonsFromInput = orderPizza.getAddonInputs();
+        Set<AddonInput> addonsFromInput = orderComposedPizza.getAddonInputs();
 
         addonsFromInput.forEach(addon -> {
             Optional<Addon> addonByName = addonRepository.findByName(addon.getAddon().getName());
@@ -77,13 +77,13 @@ public class ComposedPizzaService
             addon.setAddon(addonByName.orElse(addon.getAddon()));
         });
 
-        return orderPizzaRepository.save(orderPizza);
+        return orderComposedPizzaRepository.save(orderComposedPizza);
     }
 
-    public List<OrderPizza> findAllOrderPizza()
+    public List<OrderComposedPizza> findAllOrderPizza()
     {
-        List<OrderPizza> orderPizzas = new ArrayList<>();
-        orderPizzaRepository.findAll().forEach(orderPizzas::add);
-        return orderPizzas;
+        List<OrderComposedPizza> orderComposedPizzas = new ArrayList<>();
+        orderComposedPizzaRepository.findAll().forEach(orderComposedPizzas::add);
+        return orderComposedPizzas;
     }
 }

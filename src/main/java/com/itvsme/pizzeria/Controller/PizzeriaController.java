@@ -1,6 +1,7 @@
 package com.itvsme.pizzeria.Controller;
 
 import com.itvsme.pizzeria.Model.*;
+import com.itvsme.pizzeria.Repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.Service.AddonsService;
 import com.itvsme.pizzeria.Service.ComposedPizzaService;
 import com.itvsme.pizzeria.Service.StandardPizzaService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -18,13 +20,15 @@ public class PizzeriaController
     private AddonsService addonsService;
     private StandardPizzaService standardPizzaService;
     private ComposedPizzaService composedPizzaService;
+    private OrderPizzaRepository orderPizzaRepository;
 
     @Autowired
-    public PizzeriaController(AddonsService addonsService, StandardPizzaService standardPizzaService, ComposedPizzaService composedPizzaService)
+    public PizzeriaController(AddonsService addonsService, StandardPizzaService standardPizzaService, ComposedPizzaService composedPizzaService, OrderPizzaRepository orderPizzaRepository)
     {
         this.addonsService = addonsService;
         this.standardPizzaService = standardPizzaService;
         this.composedPizzaService = composedPizzaService;
+        this.orderPizzaRepository = orderPizzaRepository;
     }
 
     @GetMapping("/addons")
@@ -46,7 +50,7 @@ public class PizzeriaController
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<List<OrderPizza>> getAllOrderPizzas()
+    public ResponseEntity<List<OrderComposedPizza>> getAllOrderPizzas()
     {
         return new ResponseEntity<>(composedPizzaService.findAllOrderPizza(), HttpStatus.OK);
     }
@@ -55,6 +59,12 @@ public class PizzeriaController
     public ResponseEntity<List<OrderStandardPizza>> getAllOrderStandardPizzas()
     {
         return new ResponseEntity<>(standardPizzaService.findAllOrdersStandard(), HttpStatus.OK);
+    }
+
+    @GetMapping("/allorders")
+    public ResponseEntity<List<OrderPizza>> getAllOrders()
+    {
+        return new ResponseEntity<>(orderPizzaRepository.findAll(), HttpStatus.OK);
     }
 
     @PostMapping("/addons")
@@ -76,9 +86,9 @@ public class PizzeriaController
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<OrderPizza> createOrderPizza(@RequestBody OrderPizza orderPizza)
+    public ResponseEntity<OrderComposedPizza> createOrderPizza(@RequestBody OrderComposedPizza orderComposedPizza)
     {
-        return new ResponseEntity<>(composedPizzaService.saveOrder(orderPizza), HttpStatus.CREATED);
+        return new ResponseEntity<>(composedPizzaService.saveOrder(orderComposedPizza), HttpStatus.CREATED);
     }
 
     @PostMapping("/ordersStandard")

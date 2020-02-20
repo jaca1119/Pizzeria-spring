@@ -1,13 +1,14 @@
 package com.itvsme.pizzeria.Controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itvsme.pizzeria.Model.*;
+import com.itvsme.pizzeria.Repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.Service.AddonsService;
 import com.itvsme.pizzeria.Service.ComposedPizzaService;
 import com.itvsme.pizzeria.Service.StandardPizzaService;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,7 +49,11 @@ public class PizzeriaControllerTest
     @MockBean
     private ComposedPizzaService composedPizzaService;
 
+    @MockBean
+    private OrderPizzaRepository orderpizzaRepository;
+
     private ObjectMapper objectMapper = new ObjectMapper();
+
 
 
     @Test
@@ -180,13 +186,13 @@ public class PizzeriaControllerTest
         AddonInput pepper = new AddonInput("pepper", 3L, 1);
         AddonInput ham = new AddonInput("ham", 3L, 2);
 
-        OrderPizza orderPizza = new OrderPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onion, pepper).collect(Collectors.toSet()));
-        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
+        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
 
 
-        List<OrderPizza> allOrderPizza = Stream.of(orderPizza, sampleOrder).collect(Collectors.toList());
+        List<OrderComposedPizza> allOrderComposedPizza = Stream.of(orderComposedPizza, sampleOrder).collect(Collectors.toList());
 
-        when(composedPizzaService.findAllOrderPizza()).thenReturn(allOrderPizza);
+        when(composedPizzaService.findAllOrderPizza()).thenReturn(allOrderComposedPizza);
 
         mockMvc.perform(get("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -202,9 +208,9 @@ public class PizzeriaControllerTest
         AddonInput ham = new AddonInput("ham", 3L, 2);
 
 
-        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
+        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion, pepper, ham).collect(Collectors.toSet()));
 
-        when(composedPizzaService.saveOrder(any(OrderPizza.class))).thenReturn(sampleOrder);
+        when(composedPizzaService.saveOrder(any(OrderComposedPizza.class))).thenReturn(sampleOrder);
 
         String sampleOrderJson = objectMapper.writeValueAsString(sampleOrder);
 
@@ -212,6 +218,9 @@ public class PizzeriaControllerTest
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(sampleOrderJson)
                 ).andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", is("Customer name sample")))
+                .andExpect(jsonPath("$.surname", is("Customer surname sample")))
+                .andExpect(jsonPath("$.phone", is("sample")))
                 .andDo(print())
                 .andReturn();
 
@@ -223,9 +232,9 @@ public class PizzeriaControllerTest
     {
         AddonInput onion = new AddonInput("onion", 3L, 2);
 
-        OrderPizza sampleOrder = new OrderPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion).collect(Collectors.toSet()));
+        OrderComposedPizza sampleOrder = new OrderComposedPizza("Customer name sample", "Customer surname sample", "sample", Stream.of(onion).collect(Collectors.toSet()));
 
-        when(composedPizzaService.saveOrder(any(OrderPizza.class))).thenReturn(sampleOrder);
+        when(composedPizzaService.saveOrder(any(OrderComposedPizza.class))).thenReturn(sampleOrder);
 
         String sampleOrderJson = objectMapper.writeValueAsString(sampleOrder);
 
@@ -261,6 +270,9 @@ public class PizzeriaControllerTest
                 .content(orderJson)
         ).andExpect(status().isCreated())
                 .andDo(print())
+                .andExpect(jsonPath("$.name", is("name")))
+                .andExpect(jsonPath("$.surname", is("surname")))
+                .andExpect(jsonPath("$.phone", is("phone")))
                 .andReturn();
 
         assertThat(orderJson).isEqualToIgnoringWhitespace(mvcResult.getResponse().getContentAsString());
@@ -284,6 +296,32 @@ public class PizzeriaControllerTest
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
+                .andDo(print());
+    }
+
+    @Test
+    void getAllOrders() throws Exception
+    {
+        Addon onion = new Addon("onion", 3L);
+        Addon pepper = new Addon("pepper", 3L);
+
+        AddonInput onionInput = new AddonInput(onion, 1);
+        AddonInput pepperInput = new AddonInput(pepper, 2);
+
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toList()));
+
+        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name", "surname", "phone", margherita);
+        OrderStandardPizza sample = new OrderStandardPizza("sample", "sample", "123", samplePizza);
+
+        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name", "Customer surname", "phonenumber", Stream.of(onionInput, pepperInput).collect(Collectors.toSet()));
+
+
+        when(orderpizzaRepository.findAll()).thenReturn(Lists.list(orderStandardPizza, sample, orderComposedPizza));
+
+        mockMvc.perform(get("/allorders")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(jsonPath("$", hasSize(3)))
                 .andDo(print());
     }
 }

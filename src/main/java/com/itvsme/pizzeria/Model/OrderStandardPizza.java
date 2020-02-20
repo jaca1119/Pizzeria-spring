@@ -3,21 +3,18 @@ package com.itvsme.pizzeria.Model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
 @Getter @Setter
-public class OrderStandardPizza
+@ToString
+@PrimaryKeyJoinColumn(name = "order_id")
+public class OrderStandardPizza extends OrderPizza
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
-    private String name;
-    private String surname;
-    private String phone;
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "standard_id")
     private StandardPizza standardPizza;

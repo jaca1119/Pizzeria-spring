@@ -5,6 +5,7 @@ import com.itvsme.pizzeria.Model.OrderPizza;
 import com.itvsme.pizzeria.Model.OrderStandardPizza;
 import com.itvsme.pizzeria.Model.StandardPizza;
 import com.itvsme.pizzeria.Repository.AddonRepository;
+import com.itvsme.pizzeria.Repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.Repository.OrderStandardPizzaRepository;
 import com.itvsme.pizzeria.Repository.StandardPizzaRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -30,6 +32,8 @@ class StandardPizzaServiceTest
     private AddonRepository addonRepository;
     @Autowired
     private OrderStandardPizzaRepository orderStandardPizzaRepository;
+    @Autowired
+    private OrderPizzaRepository orderPizzaRepository;
 
     private StandardPizzaService standardPizzaService;
 
@@ -152,5 +156,23 @@ class StandardPizzaServiceTest
         standardPizzaService.saveOrderStandardPizza(sample);
 
         assertEquals(standardPizzaService.findAllOrdersStandard().size(), 2);
+    }
+
+    @Test
+    void getOrderPizza()
+    {
+        StandardPizzaService standardPizzaService = new StandardPizzaService(repository, addonRepository, orderStandardPizzaRepository);
+
+
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toList()));
+        StandardPizza samplePizza = new StandardPizza("Sample", Stream.of(onion).collect(Collectors.toList()));
+
+        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name", "surname", "phone", margherita);
+        OrderStandardPizza sample = new OrderStandardPizza("sample", "sample", "123", samplePizza);
+
+        standardPizzaService.saveOrderStandardPizza(orderStandardPizza);
+        standardPizzaService.saveOrderStandardPizza(sample);
+
+        assertThat(orderPizzaRepository.findAll().spliterator().estimateSize()).isEqualTo(2);
     }
 }
