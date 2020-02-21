@@ -66,6 +66,14 @@ public class ComposedPizzaService
 
     public OrderComposedPizza saveOrder(OrderComposedPizza orderComposedPizza)
     {
+        Set<AddonInput> addonsInput = orderComposedPizza.getComposedPizza().getAddonsInput();
+
+        addonsInput.forEach(addonInput -> {
+            Optional<Addon> optionalAddon = addonRepository.findByName(addonInput.getAddon().getName());
+
+            addonInput.setAddon(optionalAddon.orElse(addonInput.getAddon()));
+        });
+
         return orderComposedPizzaRepository.save(orderComposedPizza);
     }
 
