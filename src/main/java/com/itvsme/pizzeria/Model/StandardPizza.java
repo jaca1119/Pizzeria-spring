@@ -19,8 +19,7 @@ public class StandardPizza
     private Integer id;
     private String name;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "standard_pizza_id")
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Addon> addons;
 
     public StandardPizza(String name, Set<Addon> addons)

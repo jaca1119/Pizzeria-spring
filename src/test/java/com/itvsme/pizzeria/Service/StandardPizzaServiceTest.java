@@ -77,11 +77,18 @@ class StandardPizzaServiceTest
     {
 
         StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        StandardPizza sample = new StandardPizza("Sample", Stream.of(new Addon("onion", 3)).collect(Collectors.toSet()));
 
-        StandardPizza saved = standardPizzaService.save(margherita);
 
-        assertEquals(1, repository.count());
-        assertEquals(margherita, saved);
+        StandardPizza savedMargherita = standardPizzaService.save(margherita);
+        StandardPizza savedSample = standardPizzaService.save(sample);
+
+        System.out.println(savedMargherita);
+        System.out.println(savedSample);
+
+        assertEquals(2, repository.count());
+        assertThat(margherita.getAddons().containsAll(savedMargherita.getAddons())).isTrue();
+        assertThat(sample.getAddons().containsAll(savedSample.getAddons())).isTrue();
     }
 
     @Test
