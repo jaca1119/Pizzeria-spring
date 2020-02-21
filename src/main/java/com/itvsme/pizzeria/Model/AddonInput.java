@@ -3,7 +3,6 @@ package com.itvsme.pizzeria.Model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -11,7 +10,6 @@ import java.util.Objects;
 @Entity
 @Getter @Setter
 @NoArgsConstructor
-@ToString
 public class AddonInput
 {
     @Id
