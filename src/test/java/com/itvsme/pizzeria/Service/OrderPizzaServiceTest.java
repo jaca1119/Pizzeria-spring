@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -121,23 +122,15 @@ public class OrderPizzaServiceTest
     }
 
     @Test
+    @Transactional
     void saveOrderPizzaCart()
     {
         StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        ComposedPizza composedPizza = new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet()));
 
-        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name",
-                "surname",
-                "phone",
-                margherita);
+        List<Pizza> pizzaList = Lists.list(composedPizza, margherita);
 
-        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name",
-                "Customer surname",
-                "phonenumber",
-                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
-
-        List<OrderPizza> orderPizzaList = Lists.list(orderStandardPizza, orderComposedPizza);
-
-        OrderPizzaCart orderPizzaCart = new OrderPizzaCart("name", "surname", "phone", orderPizzaList);
+        OrderPizzaCart orderPizzaCart = new OrderPizzaCart("name", "surname", "phone", pizzaList);
 
         OrderPizzaCart orderWithListSave = orderPizzaService.saveOrderPizzaCart(orderPizzaCart);
 

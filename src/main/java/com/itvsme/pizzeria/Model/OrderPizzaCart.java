@@ -15,22 +15,22 @@ public class OrderPizzaCart extends OrderPizza
 {
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_pizza_with_list_id")
-    private List<OrderPizza> orderPizzas;
+    private List<Pizza> pizzas;
 
 
-    public OrderPizzaCart(String name, String surname, String phone, List<OrderPizza> orderPizzas)
+    public OrderPizzaCart(String name, String surname, String phone, List<Pizza> pizzas)
     {
         this.name = name;
         this.surname = surname;
         this.phone = phone;
-        this.orderPizzas = orderPizzas;
+        this.pizzas = pizzas;
     }
 
     @Override
     public String toString()
     {
         return "OrderPizzaCart{" +
-                "orderPizzas=" + orderPizzas +
+                "pizzas=" + pizzas +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", phone='" + phone + '\'' +
