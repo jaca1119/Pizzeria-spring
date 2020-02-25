@@ -386,7 +386,7 @@ public class PizzeriaControllerTest
 
         String orderJson = objectMapper.writeValueAsString(orderPizzaCart);
 
-        MvcResult mvcResult = mockMvc.perform(post("/order-pizza-carts")
+        MvcResult mvcResult = mockMvc.perform(post("/order-pizza-cart")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(orderJson)
         ).andExpect(status().isCreated())
