@@ -4,6 +4,7 @@ import com.itvsme.pizzeria.Model.*;
 import com.itvsme.pizzeria.Repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.Service.AddonsService;
 import com.itvsme.pizzeria.Service.ComposedPizzaService;
+import com.itvsme.pizzeria.Service.OrderPizzaService;
 import com.itvsme.pizzeria.Service.StandardPizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -21,14 +21,16 @@ public class PizzeriaController
     private StandardPizzaService standardPizzaService;
     private ComposedPizzaService composedPizzaService;
     private OrderPizzaRepository orderPizzaRepository;
+    private OrderPizzaService orderPizzaService;
 
     @Autowired
-    public PizzeriaController(AddonsService addonsService, StandardPizzaService standardPizzaService, ComposedPizzaService composedPizzaService, OrderPizzaRepository orderPizzaRepository)
+    public PizzeriaController(AddonsService addonsService, StandardPizzaService standardPizzaService, ComposedPizzaService composedPizzaService, OrderPizzaRepository orderPizzaRepository, OrderPizzaService orderPizzaService)
     {
         this.addonsService = addonsService;
         this.standardPizzaService = standardPizzaService;
         this.composedPizzaService = composedPizzaService;
         this.orderPizzaRepository = orderPizzaRepository;
+        this.orderPizzaService = orderPizzaService;
     }
 
     @GetMapping("/addons")
@@ -95,6 +97,18 @@ public class PizzeriaController
     public ResponseEntity<OrderStandardPizza> createOrderStandardPizza(@RequestBody OrderStandardPizza orderPizza)
     {
         return new ResponseEntity<>(standardPizzaService.saveOrderStandardPizza(orderPizza), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/orders-pizza")
+    public ResponseEntity<List<OrderPizza>> createAllOrdersPizza(@RequestBody Iterable<OrderPizza> orderPizzas)
+    {
+        return new ResponseEntity<>(orderPizzaService.saveAll(orderPizzas), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/order-pizza-carts")
+    public ResponseEntity<OrderPizzaCart> createOrderPizzaCart(@RequestBody OrderPizzaCart orderPizzaCart)
+    {
+        return new ResponseEntity<>(orderPizzaService.saveOrderPizzaCart(orderPizzaCart), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/addons/{id}")

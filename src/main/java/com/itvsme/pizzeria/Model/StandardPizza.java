@@ -12,11 +12,9 @@ import java.util.Set;
 @Getter @Setter
 @NoArgsConstructor
 @ToString
-public class StandardPizza
+@PrimaryKeyJoinColumn(name = "pizza_id")
+public class StandardPizza extends Pizza
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     private String name;
 
     @ManyToMany(cascade = CascadeType.PERSIST)

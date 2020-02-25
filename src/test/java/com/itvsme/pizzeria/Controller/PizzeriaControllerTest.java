@@ -5,10 +5,12 @@ import com.itvsme.pizzeria.Model.*;
 import com.itvsme.pizzeria.Repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.Service.AddonsService;
 import com.itvsme.pizzeria.Service.ComposedPizzaService;
+import com.itvsme.pizzeria.Service.OrderPizzaService;
 import com.itvsme.pizzeria.Service.StandardPizzaService;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -52,6 +54,8 @@ public class PizzeriaControllerTest
 
     @MockBean
     private OrderPizzaRepository orderpizzaRepository;
+    @MockBean
+    private OrderPizzaService orderPizzaService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -337,5 +341,58 @@ public class PizzeriaControllerTest
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(jsonPath("$", hasSize(3)))
                 .andDo(print());
+    }
+
+    @Test
+    void saveAllOrdersPizza() throws Exception
+    {
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
+
+        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name",
+                "surname",
+                "phone",
+                margherita);
+
+        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name",
+                "Customer surname",
+                "phonenumber",
+                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
+
+        List<OrderPizza> orderPizzaList = Lists.list(orderStandardPizza, orderComposedPizza);
+
+        when(orderPizzaService.saveAll(ArgumentMatchers.anyIterable())).thenReturn(orderPizzaList);
+
+        String orderJson = objectMapper.writeValueAsString(orderPizzaList);
+
+        MvcResult result = mockMvc.perform(post("/orders-pizza")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(orderJson)
+        ).andExpect(status().isCreated())
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    void saveOrderPizzaCart() throws Exception
+    {
+        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        ComposedPizza composedPizza = new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet()));
+
+        List<Pizza> pizzaList = Lists.list(composedPizza, margherita);
+
+        OrderPizzaCart orderPizzaCart = new OrderPizzaCart("name", "surname", "phone", pizzaList);
+
+        when(orderPizzaService.saveOrderPizzaCart(any(OrderPizzaCart.class))).thenReturn(orderPizzaCart);
+
+        String orderJson = objectMapper.writeValueAsString(orderPizzaCart);
+
+        MvcResult mvcResult = mockMvc.perform(post("/order-pizza-carts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(orderJson)
+        ).andExpect(status().isCreated())
+                .andDo(print())
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getContentAsString()).isEqualToIgnoringWhitespace(orderJson);
     }
 }

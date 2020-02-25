@@ -11,12 +11,9 @@ import java.util.Set;
 @Entity
 @Getter @Setter @NoArgsConstructor
 @ToString
-public class ComposedPizza
+@PrimaryKeyJoinColumn(name = "pizza_id")
+public class ComposedPizza extends Pizza
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "composed_pizza_id")
     private Set<AddonInput> addonsInput;
