@@ -105,7 +105,7 @@ public class PizzeriaController
         return new ResponseEntity<>(orderPizzaService.saveAll(orderPizzas), HttpStatus.CREATED);
     }
 
-    @PostMapping("/order-pizza-carts")
+    @PostMapping("/order-pizza-cart")
     public ResponseEntity<OrderPizzaCart> createOrderPizzaCart(@RequestBody OrderPizzaCart orderPizzaCart)
     {
         return new ResponseEntity<>(orderPizzaService.saveOrderPizzaCart(orderPizzaCart), HttpStatus.CREATED);

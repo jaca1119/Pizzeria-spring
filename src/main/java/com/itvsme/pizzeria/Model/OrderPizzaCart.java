@@ -10,11 +10,11 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @NoArgsConstructor
-@PrimaryKeyJoinColumn(name = "order_id")
+@PrimaryKeyJoinColumn(name = "order_pizza_id")
 public class OrderPizzaCart extends OrderPizza
 {
     @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "order_pizza_with_list_id")
+    @JoinColumn(name = "order_pizza_cart_id")
     private List<Pizza> pizzas;
 
 

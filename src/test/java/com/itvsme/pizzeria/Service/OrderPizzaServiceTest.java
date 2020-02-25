@@ -122,7 +122,6 @@ public class OrderPizzaServiceTest
     }
 
     @Test
-    @Transactional
     void saveOrderPizzaCart()
     {
         StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
@@ -135,5 +134,6 @@ public class OrderPizzaServiceTest
         OrderPizzaCart orderWithListSave = orderPizzaService.saveOrderPizzaCart(orderPizzaCart);
 
         assertThat(orderPizzaCart).isEqualTo(orderWithListSave);
+        System.out.println(orderPizzaRepository.findAll());
     }
 }
