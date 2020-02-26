@@ -152,11 +152,11 @@ public class PizzeriaControllerTest
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(standardPizzaJSON)
         ).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Margherita"))
-                .andExpect(jsonPath("$.addons[0].name").value("onion"))
-                .andExpect(jsonPath("$.addons[0].price").value(3L))
-                .andExpect(jsonPath("$.addons[1].name").value("pepper"))
-                .andExpect(jsonPath("$.addons[1].price").value(3L));
+                .andExpect(jsonPath("$.standard_pizza.name").value("Margherita"))
+                .andExpect(jsonPath("$.standard_pizza.addons[0].name").value("onion"))
+                .andExpect(jsonPath("$.standard_pizza.addons[0].price").value(3L))
+                .andExpect(jsonPath("$.standard_pizza.addons[1].name").value("pepper"))
+                .andExpect(jsonPath("$.standard_pizza.addons[1].price").value(3L));
     }
 
     @Test
@@ -166,17 +166,17 @@ public class PizzeriaControllerTest
 
         when(composedPizzaService.saveComposedPizza(any(ComposedPizza.class))).thenReturn(composedPizza);
 
-        String composedPizzaJson = objectMapper.writeValueAsString(composedPizza);
+        String composedPizzaJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(composedPizza);
 
         ResultActions result = mockMvc.perform(post("/composed")
         .contentType(MediaType.APPLICATION_JSON)
         .content(composedPizzaJson));
 
         result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.addonsInput[0].addon.name").value("pepper"))
-                .andExpect(jsonPath("$.addonsInput[0].addon.price").value(3L))
-                .andExpect(jsonPath("$.addonsInput[1].addon.name").value("onion"))
-                .andExpect(jsonPath("$.addonsInput[1].addon.price").value(3L));
+                .andExpect(jsonPath("$.composed_pizza.addonsInput[0].addon.name").value("pepper"))
+                .andExpect(jsonPath("$.composed_pizza.addonsInput[0].addon.price").value(3L))
+                .andExpect(jsonPath("$.composed_pizza.addonsInput[1].addon.name").value("onion"))
+                .andExpect(jsonPath("$.composed_pizza.addonsInput[1].addon.price").value(3L));
     }
 
     @Test
@@ -215,7 +215,7 @@ public class PizzeriaControllerTest
 
         when(composedPizzaService.findAllOrderPizza()).thenReturn(allOrderComposedPizza);
 
-        mockMvc.perform(get("/orders")
+        mockMvc.perform(get("/orders-composed")
                 .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2))).andDo(print());
@@ -313,7 +313,7 @@ public class PizzeriaControllerTest
 
         when(standardPizzaService.findAllOrdersStandard()).thenReturn(Lists.list(orderStandardPizza, sample));
 
-        mockMvc.perform(get("/ordersStandard")
+        mockMvc.perform(get("/orders-standard")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -337,7 +337,7 @@ public class PizzeriaControllerTest
 
         when(orderpizzaRepository.findAll()).thenReturn(Lists.list(orderStandardPizza, sample, orderComposedPizza));
 
-        mockMvc.perform(get("/allorders")
+        mockMvc.perform(get("/all-orders")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(jsonPath("$", hasSize(3)))
                 .andDo(print());
@@ -384,7 +384,8 @@ public class PizzeriaControllerTest
 
         when(orderPizzaService.saveOrderPizzaCart(any(OrderPizzaCart.class))).thenReturn(orderPizzaCart);
 
-        String orderJson = objectMapper.writeValueAsString(orderPizzaCart);
+        String orderJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(orderPizzaCart);
+        System.out.println(orderJson);
 
         MvcResult mvcResult = mockMvc.perform(post("/order-pizza-cart")
                 .contentType(MediaType.APPLICATION_JSON)

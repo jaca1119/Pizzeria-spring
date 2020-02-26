@@ -67,6 +67,26 @@ public class OrderPizzaService
 
     public OrderPizzaCart saveOrderPizzaCart(OrderPizzaCart orderPizzaCart)
     {
+        orderPizzaCart.getPizzas().forEach(pizza -> {
+            if (pizza instanceof ComposedPizza)
+            {
+                Set<AddonInput> addonsInput = ((ComposedPizza) pizza).getAddonsInput();
+                addonsInput.forEach(addonInput -> {
+                    Optional<Addon> optionalAddon = addonRepository.findByName(addonInput.getAddon().getName());
+
+                    addonInput.setAddon(optionalAddon.orElse(addonInput.getAddon()));
+                });
+            }
+            else if (pizza instanceof StandardPizza)
+            {
+                Optional<StandardPizza> optionalStandardPizza = standardPizzaRepository.findByName(((StandardPizza) pizza).getName());
+
+                optionalStandardPizza.ifPresent(standardPizza -> {
+                    int index = orderPizzaCart.getPizzas().indexOf(pizza);
+                    orderPizzaCart.getPizzas().set(index, standardPizza);
+                });
+            }
+        });
         return orderPizzaCartRepository.save(orderPizzaCart);
     }
 }

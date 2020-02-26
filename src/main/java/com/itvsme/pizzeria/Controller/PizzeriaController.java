@@ -51,19 +51,19 @@ public class PizzeriaController
         return new ResponseEntity<>(standardPizzaService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/orders-composed")
     public ResponseEntity<List<OrderComposedPizza>> getAllOrderPizzas()
     {
         return new ResponseEntity<>(composedPizzaService.findAllOrderPizza(), HttpStatus.OK);
     }
 
-    @GetMapping("/ordersStandard")
+    @GetMapping("/orders-standard")
     public ResponseEntity<List<OrderStandardPizza>> getAllOrderStandardPizzas()
     {
         return new ResponseEntity<>(standardPizzaService.findAllOrdersStandard(), HttpStatus.OK);
     }
 
-    @GetMapping("/allorders")
+    @GetMapping("/all-orders")
     public ResponseEntity<List<OrderPizza>> getAllOrders()
     {
         return new ResponseEntity<>(orderPizzaRepository.findAll(), HttpStatus.OK);
