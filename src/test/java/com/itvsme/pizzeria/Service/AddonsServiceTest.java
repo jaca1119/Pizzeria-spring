@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.List;
 import java.util.Optional;
 
+import static com.itvsme.pizzeria.utils.PizzaTestUtils.givenAddon;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -18,6 +18,9 @@ class AddonsServiceTest
 {
     @Autowired
     private AddonRepository addonRepository;
+
+    AddonsService service;
+
 
     @AfterEach
     void tearDown()
@@ -28,56 +31,24 @@ class AddonsServiceTest
     @BeforeEach
     void setUp()
     {
+        service = new AddonsService(addonRepository);
         addonRepository.deleteAll();
     }
 
     @Test
     void getOneAddon()
     {
-        AddonsService service = new AddonsService(addonRepository);
         Addon addon = new Addon("cucumber", 2L);
 
-        service.save(addon);
+        Addon save = service.save(addon);
 
-        Addon received = service.findById(addon.getId());
-
-        assertEquals(addon.getId(), received.getId());
-        assertEquals(addon.getName(), received.getName());
-        assertEquals(addon.getPrice(), received.getPrice());
-    }
-
-    @Test
-    void saveAndGetLastAddon()
-    {
-        Addon addon = new Addon("cucumber", 2L);
-        addonRepository.save(addon);
-        AddonsService addonsService = new AddonsService(addonRepository);
-
-        List<Addon> addons = addonsService.findAll();
-        Addon lastAddon = addons.get(addons.size() - 1);
-
-        assertEquals(addon.getName(), lastAddon.getName());
-        assertEquals(addon.getPrice(), lastAddon.getPrice());
-        assertEquals(addon.getId(), lastAddon.getId());
-    }
-
-    @Test
-    void saveAddon()
-    {
-        AddonsService service = new AddonsService(addonRepository);
-        Addon sample = new Addon("sample", 1L);
-
-        service.save(sample);
-
-        assertEquals(1.0, addonRepository.count());
+        assertEquals(addon, save);
     }
 
     @Test
     void deleteByIdAddon()
     {
-        AddonsService service = new AddonsService(addonRepository);
-
-        Addon sample = new Addon("sample", 1L);
+        Addon sample = givenAddon();
 
         service.save(sample);
 
@@ -89,13 +60,11 @@ class AddonsServiceTest
     @Test
     void findByName()
     {
-        AddonsService service = new AddonsService(addonRepository);
-
-        Addon sample = new Addon("sample", 1L);
+        Addon sample = givenAddon();
 
         service.save(sample);
 
-        Optional<Addon> addon = service.findByName("sample");
+        Optional<Addon> addon = service.findByName(sample.getName());
 
         assertEquals(sample.getName(), addon.orElseThrow().getName());
     }

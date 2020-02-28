@@ -12,11 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import static com.itvsme.pizzeria.utils.PizzaTestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -31,25 +29,12 @@ public class OrderPizzaServiceTest
     @Autowired
     private OrderPizzaCartRepository orderPizzaCartRepository;
 
-    private Addon onion;
-    private Addon pepper;
-    private Addon mice;
-    private AddonInput onionInput;
-    private AddonInput pepperInput;
-    private AddonInput miceInput;
-
     private OrderPizzaService orderPizzaService;
 
     @BeforeEach
     void setUp()
     {
         orderPizzaService = new OrderPizzaService(orderPizzaRepository, standardPizzaRepository, addonRepository, orderPizzaCartRepository);
-        onion = new Addon("onion", 3L);
-        pepper = new Addon("pepper", 3L);
-        mice = new Addon("mice", 3L);
-        onionInput = new AddonInput(onion,2);
-        pepperInput = new AddonInput(pepper, 1);
-        miceInput = new AddonInput(mice, 2);
     }
 
     @AfterEach
@@ -63,12 +48,7 @@ public class OrderPizzaServiceTest
     @Test
     void saveStandardPizzaToOrderPizza()
     {
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
-
-        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name",
-                "surname",
-                "phone",
-                margherita);
+        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
 
         OrderPizza saved = orderPizzaService.saveOrder(orderStandardPizza);
 
@@ -78,17 +58,9 @@ public class OrderPizzaServiceTest
     @Test
     void saveStandardPizzaAndComposedPizzaToOrderPizza()
     {
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
+        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
 
-        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name",
-                "surname",
-                "phone",
-                margherita);
-
-        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name",
-                "Customer surname",
-                "phonenumber",
-                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
+        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
 
         orderPizzaService.saveOrder(orderStandardPizza);
         orderPizzaService.saveOrder(orderComposedPizza);
@@ -102,17 +74,10 @@ public class OrderPizzaServiceTest
     @Test
     void saveAllOrdersPizza()
     {
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
 
-        OrderStandardPizza orderStandardPizza = new OrderStandardPizza("name",
-                "surname",
-                "phone",
-                margherita);
+        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
 
-        OrderComposedPizza orderComposedPizza = new OrderComposedPizza("Customer name",
-                "Customer surname",
-                "phonenumber",
-                new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet())));
+        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
 
         List<OrderPizza> orderPizzaList = Lists.list(orderStandardPizza, orderComposedPizza);
 
@@ -124,16 +89,10 @@ public class OrderPizzaServiceTest
     @Test
     void saveOrderPizzaCart()
     {
-        StandardPizza margherita = new StandardPizza("Margherita", Stream.of(onion, pepper).collect(Collectors.toSet()));
-        ComposedPizza composedPizza = new ComposedPizza(Stream.of(miceInput, onionInput).collect(Collectors.toSet()));
-
-        List<Pizza> pizzaList = Lists.list(composedPizza, margherita);
-
-        OrderPizzaCart orderPizzaCart = new OrderPizzaCart("name", "surname", "phone", pizzaList);
+        OrderPizzaCart orderPizzaCart = givenOrderPizzaCart();
 
         OrderPizzaCart orderWithListSave = orderPizzaService.saveOrderPizzaCart(orderPizzaCart);
 
         assertThat(orderPizzaCart).isEqualTo(orderWithListSave);
-        System.out.println(orderPizzaRepository.findAll());
     }
 }

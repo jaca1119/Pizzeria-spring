@@ -1,6 +1,7 @@
 package com.itvsme.pizzeria.Service;
 
 import com.itvsme.pizzeria.Model.Addon;
+import com.itvsme.pizzeria.Model.AddonInput;
 import com.itvsme.pizzeria.Model.OrderStandardPizza;
 import com.itvsme.pizzeria.Model.StandardPizza;
 import com.itvsme.pizzeria.Repository.AddonRepository;
@@ -65,7 +66,22 @@ public class StandardPizzaService
     {
         Optional<StandardPizza> optionalStandardPizza = standardPizzaRepository.findByName(orderStandardPizza.getStandardPizza().getName());
 
-        optionalStandardPizza.ifPresent(orderStandardPizza::setStandardPizza);
+        if (optionalStandardPizza.isPresent())
+        {
+            orderStandardPizza.setStandardPizza(optionalStandardPizza.get());
+        }
+        else
+        {
+            Set<Addon> addons = orderStandardPizza.getStandardPizza().getAddons();
+            Set<Addon> addonsWithExistingAddons = new HashSet<>();
+            addons.forEach(addon -> {
+                Optional<Addon> optionalAddon = addonRepository.findByName(addon.getName());
+
+                addonsWithExistingAddons.add(optionalAddon.orElse(addon));
+            });
+
+            orderStandardPizza.getStandardPizza().setAddons(addonsWithExistingAddons);
+        }
 
         return orderStandardPizzaRepository.save(orderStandardPizza);
     }
