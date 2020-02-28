@@ -1,6 +1,6 @@
 package com.itvsme.pizzeria.utils;
 
-import com.itvsme.pizzeria.Model.*;
+import com.itvsme.pizzeria.model.*;
 import org.assertj.core.util.Lists;
 
 import java.util.stream.Collectors;
