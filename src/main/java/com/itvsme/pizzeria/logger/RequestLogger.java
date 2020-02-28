@@ -1,0 +1,45 @@
+package com.itvsme.pizzeria.logger;
+
+import com.itvsme.pizzeria.model.RequestLog;
+import com.itvsme.pizzeria.repository.RequestLogRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
+import java.time.Instant;
+
+@Component
+public class RequestLogger extends HandlerInterceptorAdapter
+{
+    private RequestLogRepository requestLogRepository;
+
+    private RequestLog requestLog;
+
+    @Autowired
+    public RequestLogger(RequestLogRepository requestLogRepository)
+    {
+        this.requestLogRepository = requestLogRepository;
+    }
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
+    {
+        requestLog = new RequestLog();
+        requestLog.setPreHandleTime(Timestamp.from(Instant.now()));
+        requestLog.setUri(request.getRequestURI());
+
+        return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception
+    {
+        requestLog.setAfterCompletionTime(Timestamp.from(Instant.now()));
+        requestLog.setStatus(response.getStatus());
+
+        requestLogRepository.save(requestLog);
+    }
+}

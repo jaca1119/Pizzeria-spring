@@ -3,6 +3,7 @@ package com.itvsme.pizzeria.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itvsme.pizzeria.model.*;
 import com.itvsme.pizzeria.repository.OrderPizzaRepository;
+import com.itvsme.pizzeria.repository.RequestLogRepository;
 import com.itvsme.pizzeria.service.AddonsService;
 import com.itvsme.pizzeria.service.ComposedPizzaService;
 import com.itvsme.pizzeria.service.OrderPizzaService;
@@ -43,17 +44,16 @@ public class PizzeriaControllerTest
 
     @MockBean
     private AddonsService addonsService;
-
     @MockBean
     private StandardPizzaService standardPizzaService;
-
     @MockBean
     private ComposedPizzaService composedPizzaService;
-
     @MockBean
     private OrderPizzaRepository orderpizzaRepository;
     @MockBean
     private OrderPizzaService orderPizzaService;
+    @MockBean
+    private RequestLogRepository requestLogRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 

@@ -2,6 +2,7 @@ package com.itvsme.pizzeria.controller;
 
 import com.itvsme.pizzeria.model.*;
 import com.itvsme.pizzeria.repository.OrderPizzaRepository;
+import com.itvsme.pizzeria.repository.RequestLogRepository;
 import com.itvsme.pizzeria.service.AddonsService;
 import com.itvsme.pizzeria.service.ComposedPizzaService;
 import com.itvsme.pizzeria.service.OrderPizzaService;
@@ -22,15 +23,23 @@ public class PizzeriaController
     private ComposedPizzaService composedPizzaService;
     private OrderPizzaRepository orderPizzaRepository;
     private OrderPizzaService orderPizzaService;
+    private RequestLogRepository requestLogRepository;
 
     @Autowired
-    public PizzeriaController(AddonsService addonsService, StandardPizzaService standardPizzaService, ComposedPizzaService composedPizzaService, OrderPizzaRepository orderPizzaRepository, OrderPizzaService orderPizzaService)
+    public PizzeriaController(AddonsService addonsService, StandardPizzaService standardPizzaService, ComposedPizzaService composedPizzaService, OrderPizzaRepository orderPizzaRepository, OrderPizzaService orderPizzaService, RequestLogRepository requestLogRepository)
     {
         this.addonsService = addonsService;
         this.standardPizzaService = standardPizzaService;
         this.composedPizzaService = composedPizzaService;
         this.orderPizzaRepository = orderPizzaRepository;
         this.orderPizzaService = orderPizzaService;
+        this.requestLogRepository = requestLogRepository;
+    }
+
+    @GetMapping("/logs")
+    public ResponseEntity<List<RequestLog>> getAllLogs()
+    {
+        return new ResponseEntity<>(requestLogRepository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/addons")
