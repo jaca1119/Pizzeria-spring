@@ -16,8 +16,6 @@ public class RequestLogger extends HandlerInterceptorAdapter
 {
     private RequestLogRepository requestLogRepository;
 
-    private RequestLog requestLog;
-
     @Autowired
     public RequestLogger(RequestLogRepository requestLogRepository)
     {
@@ -27,19 +25,13 @@ public class RequestLogger extends HandlerInterceptorAdapter
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
-        requestLog = new RequestLog();
+        RequestLog requestLog = new RequestLog();
         requestLog.setPreHandleTime(Timestamp.from(Instant.now()));
         requestLog.setUri(request.getRequestURI());
-
-        return true;
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception
-    {
-        requestLog.setAfterCompletionTime(Timestamp.from(Instant.now()));
         requestLog.setStatus(response.getStatus());
 
         requestLogRepository.save(requestLog);
+
+        return true;
     }
 }

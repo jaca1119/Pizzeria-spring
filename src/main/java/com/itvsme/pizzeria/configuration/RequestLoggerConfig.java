@@ -18,6 +18,6 @@ public class RequestLoggerConfig implements WebMvcConfigurer
     @Override
     public void addInterceptors(InterceptorRegistry registry)
     {
-        registry.addInterceptor(requestLogger);
+        registry.addInterceptor(requestLogger).excludePathPatterns("/logs");
     }
 }

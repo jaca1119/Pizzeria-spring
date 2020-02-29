@@ -21,5 +21,4 @@ public class RequestLog
     private String uri;
     private int status;
     private Timestamp preHandleTime;
-    private Timestamp afterCompletionTime;
 }
