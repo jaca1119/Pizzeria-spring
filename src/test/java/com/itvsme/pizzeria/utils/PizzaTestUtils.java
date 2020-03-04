@@ -18,16 +18,6 @@ public class  PizzaTestUtils
         return new StandardPizza("Sample", Stream.of( new Addon("onion", 3L)).collect(Collectors.toSet()));
     }
 
-    public static OrderStandardPizza givenOrderStandardPizzaMargherita()
-    {
-        return new OrderStandardPizza("name", "surname", "phone", givenStandardPizzaMargherita());
-    }
-
-    public static OrderStandardPizza givenOrderStandardPizzaSample()
-    {
-        return new OrderStandardPizza("name", "surname", "phone", givenStandardPizzaSample());
-    }
-
     public static ComposedPizza givenComposedPizza()
     {
         return new ComposedPizza(Stream.of(new AddonInput(new Addon("mice", 3L), 2),new AddonInput(new Addon("onion", 3L),2)).collect(Collectors.toSet()));
@@ -41,14 +31,6 @@ public class  PizzaTestUtils
     public static OrderPizzaCart givenOrderPizzaCart()
     {
         return new OrderPizzaCart("name", "surname", "phone", Lists.list(givenStandardPizzaMargherita(), givenComposedPizza()));
-    }
-
-    public static OrderComposedPizza givenOrderComposedPizza()
-    {
-        return new OrderComposedPizza("Customer name",
-                "Customer surname",
-                "phonenumber",
-                givenComposedPizza());
     }
 
     public static Addon givenAddon()

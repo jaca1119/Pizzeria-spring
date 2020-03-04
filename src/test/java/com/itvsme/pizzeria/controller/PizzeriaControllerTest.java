@@ -8,9 +8,7 @@ import com.itvsme.pizzeria.service.AddonsService;
 import com.itvsme.pizzeria.service.ComposedPizzaService;
 import com.itvsme.pizzeria.service.OrderPizzaService;
 import com.itvsme.pizzeria.service.StandardPizzaService;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,7 +21,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static com.itvsme.pizzeria.utils.PizzaTestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,14 +30,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @WebMvcTest
 public class PizzeriaControllerTest
 {
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
     private AddonsService addonsService;
@@ -173,140 +168,6 @@ public class PizzeriaControllerTest
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk());
-    }
-
-    @Test
-    void findAllOrderPizza() throws Exception
-    {
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        OrderComposedPizza sampleOrder = givenOrderComposedPizza();
-
-
-        List<OrderComposedPizza> allOrderComposedPizza = Stream.of(orderComposedPizza, sampleOrder).collect(Collectors.toList());
-
-        when(composedPizzaService.findAllOrderPizza()).thenReturn(allOrderComposedPizza);
-
-        mockMvc.perform(get("/orders-composed")
-                .contentType(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2))).andDo(print());
-    }
-
-    @Test
-    void addOrderPizza() throws Exception
-    {
-        OrderComposedPizza sampleOrder = givenOrderComposedPizza();
-
-        when(composedPizzaService.saveOrder(any(OrderComposedPizza.class))).thenReturn(sampleOrder);
-
-        String sampleOrderJson = objectMapper.writeValueAsString(sampleOrder);
-
-        MvcResult mvcResult = mockMvc.perform(post("/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(sampleOrderJson)
-                ).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is("Customer name")))
-                .andExpect(jsonPath("$.surname", is("Customer surname")))
-                .andExpect(jsonPath("$.phone", is("phonenumber")))
-                .andDo(print())
-                .andReturn();
-
-        assertThat(sampleOrderJson).isEqualToIgnoringWhitespace(mvcResult.getResponse().getContentAsString());
-    }
-
-    @Test
-    void addOrderPizzaWithInputAddon() throws Exception
-    {
-        OrderComposedPizza sampleOrder = givenOrderComposedPizza();
-
-        when(composedPizzaService.saveOrder(any(OrderComposedPizza.class))).thenReturn(sampleOrder);
-
-        String sampleOrderJson = objectMapper.writeValueAsString(sampleOrder);
-
-        MvcResult mvcResult = mockMvc.perform(post("/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(sampleOrderJson)
-        ).andExpect(status().isCreated())
-                .andDo(print())
-                .andReturn();
-
-        assertThat(sampleOrderJson).isEqualToIgnoringWhitespace(mvcResult.getResponse().getContentAsString());
-    }
-
-    @Test
-    void addOrderStandardPizza() throws Exception
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-
-        when(standardPizzaService.saveOrderStandardPizza(any(OrderStandardPizza.class))).thenReturn(orderStandardPizza);
-
-        String orderJson = objectMapper.writeValueAsString(orderStandardPizza);
-
-        MvcResult mvcResult = mockMvc.perform(post("/ordersStandard")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(orderJson)
-        ).andExpect(status().isCreated())
-                .andDo(print())
-                .andExpect(jsonPath("$.name", is("name")))
-                .andExpect(jsonPath("$.surname", is("surname")))
-                .andExpect(jsonPath("$.phone", is("phone")))
-                .andReturn();
-
-        assertThat(orderJson).isEqualToIgnoringWhitespace(mvcResult.getResponse().getContentAsString());
-    }
-
-    @Test
-    void getAllOrderStandard() throws Exception
-    {
-        OrderStandardPizza orderStandardPizza =givenOrderStandardPizzaMargherita();
-        OrderStandardPizza sample = givenOrderStandardPizzaSample();
-
-        when(standardPizzaService.findAllOrdersStandard()).thenReturn(Lists.list(orderStandardPizza, sample));
-
-        mockMvc.perform(get("/orders-standard")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andDo(print());
-    }
-
-    @Test
-    void getAllOrders() throws Exception
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-        OrderStandardPizza sample = givenOrderStandardPizzaSample();
-
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-
-        when(orderpizzaRepository.findAll()).thenReturn(Lists.list(orderStandardPizza, sample, orderComposedPizza));
-
-        mockMvc.perform(get("/all-orders")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(jsonPath("$", hasSize(3)))
-                .andDo(print());
-    }
-
-    @Test
-    void saveAllOrdersPizza() throws Exception
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        List<OrderPizza> orderPizzaList = Lists.list(orderStandardPizza, orderComposedPizza);
-
-        when(orderPizzaService.saveAll(ArgumentMatchers.anyIterable())).thenReturn(orderPizzaList);
-
-        String orderJson = objectMapper.writeValueAsString(orderPizzaList);
-
-        MvcResult result = mockMvc.perform(post("/orders-pizza")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(orderJson)
-        ).andExpect(status().isCreated())
-                .andDo(print())
-                .andReturn();
-        assertThat(orderJson).isEqualToIgnoringWhitespace(result.getResponse().getContentAsString());
     }
 
     @Test

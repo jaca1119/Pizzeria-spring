@@ -5,14 +5,11 @@ import com.itvsme.pizzeria.repository.AddonRepository;
 import com.itvsme.pizzeria.repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.repository.OrderPizzaCartRepository;
 import com.itvsme.pizzeria.repository.StandardPizzaRepository;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import java.util.List;
 
 import static com.itvsme.pizzeria.utils.PizzaTestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,47 +40,6 @@ public class OrderPizzaServiceTest
         addonRepository.deleteAll();
         standardPizzaRepository.deleteAll();
         orderPizzaRepository.deleteAll();
-    }
-
-    @Test
-    void saveStandardPizzaToOrderPizza()
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-
-        OrderPizza saved = orderPizzaService.saveOrder(orderStandardPizza);
-
-        assertThat(orderStandardPizza).isEqualTo(saved);
-    }
-
-    @Test
-    void saveStandardPizzaAndComposedPizzaToOrderPizza()
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        orderPizzaService.saveOrder(orderStandardPizza);
-        orderPizzaService.saveOrder(orderComposedPizza);
-
-        List<OrderPizza> orderPizzas =  orderPizzaService.findAll();
-
-        assertThat(Lists.list(orderStandardPizza, orderComposedPizza)).isEqualTo(orderPizzas);
-        assertThat(addonRepository.count()).isEqualTo(3);
-    }
-
-    @Test
-    void saveAllOrdersPizza()
-    {
-
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        List<OrderPizza> orderPizzaList = Lists.list(orderStandardPizza, orderComposedPizza);
-
-        List<OrderPizza> orderPizzas = orderPizzaService.saveAll(orderPizzaList);
-
-        assertThat(orderPizzaList).isEqualTo(orderPizzas);
     }
 
     @Test

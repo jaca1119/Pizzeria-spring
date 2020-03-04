@@ -1,10 +1,8 @@
 package com.itvsme.pizzeria.service;
 
-import com.itvsme.pizzeria.model.OrderStandardPizza;
 import com.itvsme.pizzeria.model.StandardPizza;
 import com.itvsme.pizzeria.repository.AddonRepository;
 import com.itvsme.pizzeria.repository.OrderPizzaRepository;
-import com.itvsme.pizzeria.repository.OrderStandardPizzaRepository;
 import com.itvsme.pizzeria.repository.StandardPizzaRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,14 +26,9 @@ class StandardPizzaServiceTest
     @Autowired
     private AddonRepository addonRepository;
     @Autowired
-    private OrderStandardPizzaRepository orderStandardPizzaRepository;
-    @Autowired
     private OrderPizzaRepository orderPizzaRepository;
 
     private StandardPizzaService standardPizzaService;
-
-
-
 
     @AfterEach
     void tearDown()
@@ -47,7 +40,7 @@ class StandardPizzaServiceTest
     @BeforeEach
     void setUp()
     {
-        standardPizzaService = new StandardPizzaService(standardPizzaRepository, addonRepository, orderStandardPizzaRepository);
+        standardPizzaService = new StandardPizzaService(standardPizzaRepository, addonRepository);
     }
 
     @Test
@@ -107,43 +100,5 @@ class StandardPizzaServiceTest
         standardPizzaService.deleteById(margherita.getId());
 
         assertEquals(standardPizzaRepository.count(), 0);
-    }
-
-    @Test
-    void saveOrderStandardPizzaWithStandardPizzaInRepo()
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-
-        standardPizzaService.save(givenStandardPizzaMargherita());
-
-        OrderStandardPizza saveOrderStandardPizza = standardPizzaService.saveOrderStandardPizza(orderStandardPizza);
-
-        assertEquals(orderStandardPizza, saveOrderStandardPizza);
-        assertEquals(standardPizzaRepository.count(), 1);
-        assertEquals(addonRepository.count(), 2);
-    }
-
-    @Test
-    void findAllOrderStandardPizza()
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-        OrderStandardPizza sample = givenOrderStandardPizzaSample();
-
-        standardPizzaService.saveOrderStandardPizza(orderStandardPizza);
-        standardPizzaService.saveOrderStandardPizza(sample);
-
-        assertEquals(standardPizzaService.findAllOrdersStandard().size(), 2);
-    }
-
-    @Test
-    void getOrderPizza()
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-        OrderStandardPizza sample = givenOrderStandardPizzaSample();
-
-        standardPizzaService.saveOrderStandardPizza(orderStandardPizza);
-        standardPizzaService.saveOrderStandardPizza(sample);
-
-        assertThat(orderPizzaRepository.findAll().spliterator().estimateSize()).isEqualTo(2);
     }
 }

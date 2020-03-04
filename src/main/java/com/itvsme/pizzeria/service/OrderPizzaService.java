@@ -5,7 +5,6 @@ import com.itvsme.pizzeria.repository.AddonRepository;
 import com.itvsme.pizzeria.repository.OrderPizzaCartRepository;
 import com.itvsme.pizzeria.repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.repository.StandardPizzaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,39 +19,12 @@ public class OrderPizzaService
     private AddonRepository addonRepository;
     private OrderPizzaCartRepository orderPizzaCartRepository;
 
-    @Autowired
     public OrderPizzaService(OrderPizzaRepository orderPizzaRepository, StandardPizzaRepository standardPizzaRepository, AddonRepository addonRepository, OrderPizzaCartRepository orderPizzaCartRepository)
     {
         this.orderPizzaRepository = orderPizzaRepository;
         this.standardPizzaRepository = standardPizzaRepository;
         this.addonRepository = addonRepository;
         this.orderPizzaCartRepository = orderPizzaCartRepository;
-    }
-
-    public OrderPizzaService(OrderPizzaRepository orderPizzaRepository)
-    {
-        this.orderPizzaRepository = orderPizzaRepository;
-    }
-
-    public OrderPizza saveOrder(OrderPizza orderPizza)
-    {
-        if (orderPizza instanceof OrderComposedPizza)
-        {
-            Set<AddonInput> addonsInput = ((OrderComposedPizza) orderPizza).getComposedPizza().getAddonsInput();
-            addonsInput.forEach(addonInput -> {
-                Optional<Addon> optionalAddon = addonRepository.findByName(addonInput.getAddon().getName());
-
-                addonInput.setAddon(optionalAddon.orElse(addonInput.getAddon()));
-            });
-        }
-        else if (orderPizza instanceof OrderStandardPizza)
-        {
-            Optional<StandardPizza> optionalStandardPizza = standardPizzaRepository.findByName(((OrderStandardPizza) orderPizza).getStandardPizza().getName());
-
-            optionalStandardPizza.ifPresent(((OrderStandardPizza) orderPizza)::setStandardPizza);
-        }
-
-        return orderPizzaRepository.save(orderPizza);
     }
 
     public List<OrderPizza> findAll()

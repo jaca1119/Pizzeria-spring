@@ -16,7 +16,6 @@ public class RequestLogger extends HandlerInterceptorAdapter
 {
     private RequestLogRepository requestLogRepository;
 
-    @Autowired
     public RequestLogger(RequestLogRepository requestLogRepository)
     {
         this.requestLogRepository = requestLogRepository;
