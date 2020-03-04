@@ -2,7 +2,6 @@ package com.itvsme.pizzeria.service;
 
 import com.itvsme.pizzeria.model.StandardPizza;
 import com.itvsme.pizzeria.repository.AddonRepository;
-import com.itvsme.pizzeria.repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.repository.StandardPizzaRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,8 +24,6 @@ class StandardPizzaServiceTest
     private StandardPizzaRepository standardPizzaRepository;
     @Autowired
     private AddonRepository addonRepository;
-    @Autowired
-    private OrderPizzaRepository orderPizzaRepository;
 
     private StandardPizzaService standardPizzaService;
 

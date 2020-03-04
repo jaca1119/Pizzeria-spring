@@ -20,8 +20,6 @@ public class AddonAndStandardTest
     private StandardPizzaRepository standardPizzaRepository;
     @Autowired
     private ComposedPizzaRepository composedPizzaRepository;
-    @Autowired
-    private OrderPizzaRepository orderPizzaRepository;
 
     private StandardPizzaService standardPizzaService;
     private ComposedPizzaService composedPizzaService;

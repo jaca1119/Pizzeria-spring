@@ -18,13 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ComposedPizzaServiceTest
 {
     @Autowired
-    private StandardPizzaRepository standardPizzaRepository;
-    @Autowired
     private ComposedPizzaRepository composedPizzaRepository;
     @Autowired
     private AddonRepository addonRepository;
-    @Autowired
-    private OrderPizzaRepository orderPizzaRepository;
     @Autowired
     private AddonInputRepository addonInputRepository;
 
