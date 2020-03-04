@@ -1,6 +1,6 @@
 package com.itvsme.pizzeria.service;
 
-import com.itvsme.pizzeria.model.StandardPizza;
+import com.itvsme.pizzeria.model.pizza.StandardPizza;
 import com.itvsme.pizzeria.repository.AddonRepository;
 import com.itvsme.pizzeria.repository.StandardPizzaRepository;
 import org.junit.jupiter.api.AfterEach;

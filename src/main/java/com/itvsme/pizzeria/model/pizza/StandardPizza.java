@@ -1,11 +1,13 @@
-package com.itvsme.pizzeria.model;
+package com.itvsme.pizzeria.model.pizza;
 
+import com.itvsme.pizzeria.model.addon.Addon;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Currency;
 import java.util.Set;
 
 @Entity

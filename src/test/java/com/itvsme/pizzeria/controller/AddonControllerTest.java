@@ -1,7 +1,7 @@
 package com.itvsme.pizzeria.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itvsme.pizzeria.model.Addon;
+import com.itvsme.pizzeria.model.addon.Addon;
 import com.itvsme.pizzeria.repository.RequestLogRepository;
 import com.itvsme.pizzeria.service.AddonsService;
 import org.junit.jupiter.api.Test;

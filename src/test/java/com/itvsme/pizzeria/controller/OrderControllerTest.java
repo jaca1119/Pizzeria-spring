@@ -1,7 +1,7 @@
 package com.itvsme.pizzeria.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itvsme.pizzeria.model.OrderPizzaCart;
+import com.itvsme.pizzeria.model.order.OrderPizzaCart;
 import com.itvsme.pizzeria.repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.repository.RequestLogRepository;
 import com.itvsme.pizzeria.service.OrderPizzaService;

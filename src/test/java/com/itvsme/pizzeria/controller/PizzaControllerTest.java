@@ -1,7 +1,8 @@
 package com.itvsme.pizzeria.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itvsme.pizzeria.model.*;
+import com.itvsme.pizzeria.model.pizza.ComposedPizza;
+import com.itvsme.pizzeria.model.pizza.StandardPizza;
 import com.itvsme.pizzeria.repository.RequestLogRepository;
 import com.itvsme.pizzeria.service.ComposedPizzaService;
 import com.itvsme.pizzeria.service.StandardPizzaService;
@@ -75,7 +76,8 @@ public class PizzaControllerTest
                 .andExpect(jsonPath("$.standard_pizza.addons[0].name").value("onion"))
                 .andExpect(jsonPath("$.standard_pizza.addons[0].price").value(3L))
                 .andExpect(jsonPath("$.standard_pizza.addons[1].name").value("pepper"))
-                .andExpect(jsonPath("$.standard_pizza.addons[1].price").value(3L));
+                .andExpect(jsonPath("$.standard_pizza.addons[1].price").value(3L))
+        .andDo(print());
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.itvsme.pizzeria.model;
+package com.itvsme.pizzeria.model.pizza;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

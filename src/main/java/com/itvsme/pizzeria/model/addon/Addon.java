@@ -1,4 +1,4 @@
-package com.itvsme.pizzeria.model;
+package com.itvsme.pizzeria.model.addon;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

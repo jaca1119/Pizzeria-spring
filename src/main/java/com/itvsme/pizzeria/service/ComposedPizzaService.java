@@ -1,8 +1,8 @@
 package com.itvsme.pizzeria.service;
 
-import com.itvsme.pizzeria.model.Addon;
-import com.itvsme.pizzeria.model.AddonInput;
-import com.itvsme.pizzeria.model.ComposedPizza;
+import com.itvsme.pizzeria.model.addon.Addon;
+import com.itvsme.pizzeria.model.addon.AddonInput;
+import com.itvsme.pizzeria.model.pizza.ComposedPizza;
 import com.itvsme.pizzeria.repository.AddonRepository;
 import com.itvsme.pizzeria.repository.ComposedPizzaRepository;
 import org.springframework.stereotype.Service;

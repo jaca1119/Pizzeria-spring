@@ -1,6 +1,6 @@
 package com.itvsme.pizzeria.service;
 
-import com.itvsme.pizzeria.model.*;
+import com.itvsme.pizzeria.model.order.OrderPizzaCart;
 import com.itvsme.pizzeria.repository.AddonRepository;
 import com.itvsme.pizzeria.repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.repository.OrderPizzaCartRepository;

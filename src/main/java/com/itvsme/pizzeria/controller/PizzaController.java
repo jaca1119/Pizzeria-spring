@@ -1,6 +1,7 @@
 package com.itvsme.pizzeria.controller;
 
-import com.itvsme.pizzeria.model.*;
+import com.itvsme.pizzeria.model.pizza.ComposedPizza;
+import com.itvsme.pizzeria.model.pizza.StandardPizza;
 import com.itvsme.pizzeria.service.ComposedPizzaService;
 import com.itvsme.pizzeria.service.StandardPizzaService;
 import org.springframework.http.HttpStatus;

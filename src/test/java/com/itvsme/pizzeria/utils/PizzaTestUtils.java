@@ -1,6 +1,10 @@
 package com.itvsme.pizzeria.utils;
 
-import com.itvsme.pizzeria.model.*;
+import com.itvsme.pizzeria.model.addon.Addon;
+import com.itvsme.pizzeria.model.addon.AddonInput;
+import com.itvsme.pizzeria.model.order.OrderPizzaCart;
+import com.itvsme.pizzeria.model.pizza.ComposedPizza;
+import com.itvsme.pizzeria.model.pizza.StandardPizza;
 import org.assertj.core.util.Lists;
 
 import java.util.stream.Collectors;

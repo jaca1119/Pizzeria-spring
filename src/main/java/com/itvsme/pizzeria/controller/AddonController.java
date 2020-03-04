@@ -1,6 +1,6 @@
 package com.itvsme.pizzeria.controller;
 
-import com.itvsme.pizzeria.model.Addon;
+import com.itvsme.pizzeria.model.addon.Addon;
 import com.itvsme.pizzeria.service.AddonsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

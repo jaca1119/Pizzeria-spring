@@ -1,6 +1,6 @@
 package com.itvsme.pizzeria.repository;
 
-import com.itvsme.pizzeria.model.Addon;
+import com.itvsme.pizzeria.model.addon.Addon;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

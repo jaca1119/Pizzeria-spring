@@ -1,6 +1,6 @@
 package com.itvsme.pizzeria.service;
 
-import com.itvsme.pizzeria.model.Addon;
+import com.itvsme.pizzeria.model.addon.Addon;
 import com.itvsme.pizzeria.repository.AddonRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
