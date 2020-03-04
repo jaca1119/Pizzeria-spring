@@ -22,3 +22,4 @@ TDD and best programming practices
 - [ ] Spring Security
   - [ ] Login
   - [ ] Disable some endpoints to user
+- [ ] HATEOAS
