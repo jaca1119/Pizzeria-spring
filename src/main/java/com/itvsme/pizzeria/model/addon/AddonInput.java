@@ -29,7 +29,7 @@ public class AddonInput
         this.addon = addon;
     }
 
-    public AddonInput(String name, long price, int amount)
+    public AddonInput(String name, int price, int amount)
     {
         this.addon = new Addon(name, price);
         this.amount = amount;

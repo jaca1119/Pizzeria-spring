@@ -63,7 +63,7 @@ class AddonControllerTest
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("cucumber"))
-                .andExpect(jsonPath("$.price").value(2L));
+                .andExpect(jsonPath("$.price").value(200));
     }
 
     @Test
@@ -80,7 +80,7 @@ class AddonControllerTest
 
         result.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("cucumber"))
-                .andExpect(jsonPath("$.price").value(2L));
+                .andExpect(jsonPath("$.price").value(200));
     }
 
     @Test

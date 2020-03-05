@@ -16,9 +16,9 @@ public class Addon
     private Integer id;
 
     private String name;
-    private float price;
+    private int price;
 
-    public Addon(String name, long price)
+    public Addon(String name, int price)
     {
         this.name = name;
         this.price = price;

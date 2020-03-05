@@ -19,12 +19,16 @@ public class StandardPizza extends Pizza
 {
     private String name;
 
+    @Column(name = "price")
+    private int priceIntegralMultipleValue;
+
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Addon> addons;
 
-    public StandardPizza(String name, Set<Addon> addons)
+    public StandardPizza(String name, Set<Addon> addons, int priceIntegralMultipleValue)
     {
         this.name = name;
         this.addons = addons;
+        this.priceIntegralMultipleValue = priceIntegralMultipleValue;
     }
 }

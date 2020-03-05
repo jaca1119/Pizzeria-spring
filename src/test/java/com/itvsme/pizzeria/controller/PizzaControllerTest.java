@@ -73,10 +73,11 @@ public class PizzaControllerTest
                 .content(standardPizzaJSON)
         ).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.standard_pizza.name").value("Margherita"))
-                .andExpect(jsonPath("$.standard_pizza.addons[0].name").value("onion"))
-                .andExpect(jsonPath("$.standard_pizza.addons[0].price").value(3L))
-                .andExpect(jsonPath("$.standard_pizza.addons[1].name").value("pepper"))
-                .andExpect(jsonPath("$.standard_pizza.addons[1].price").value(3L))
+                .andExpect(jsonPath("$.standard_pizza.addons[0].name").value("pepper"))
+                .andExpect(jsonPath("$.standard_pizza.addons[0].price").value(300))
+                .andExpect(jsonPath("$.standard_pizza.addons[1].name").value("onion"))
+                .andExpect(jsonPath("$.standard_pizza.addons[1].price").value(300))
+                .andExpect(jsonPath("$.standard_pizza.priceIntegralMultipleValue").value(1000))
         .andDo(print());
     }
 
@@ -94,10 +95,12 @@ public class PizzaControllerTest
         .content(composedPizzaJson));
 
         result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.composed_pizza.addonsInput[0].addon.name").value("mice"))
-                .andExpect(jsonPath("$.composed_pizza.addonsInput[0].addon.price").value(3L))
-                .andExpect(jsonPath("$.composed_pizza.addonsInput[1].addon.name").value("onion"))
-                .andExpect(jsonPath("$.composed_pizza.addonsInput[1].addon.price").value(3L));
+                .andExpect(jsonPath("$.composed_pizza.addonsInput[0].addon.name").value("onion"))
+                .andExpect(jsonPath("$.composed_pizza.addonsInput[0].addon.price").value(300))
+                .andExpect(jsonPath("$.composed_pizza.addonsInput[1].addon.name").value("mice"))
+                .andExpect(jsonPath("$.composed_pizza.addonsInput[1].addon.price").value(300))
+                .andExpect(jsonPath("$.composed_pizza.size.sizeInCm").value(25))
+                .andExpect(jsonPath("$.composed_pizza.size.priceMultiplier").value(1.1F));
     }
 
     @Test

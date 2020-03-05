@@ -38,7 +38,7 @@ class AddonsServiceTest
     @Test
     void getOneAddon()
     {
-        Addon addon = new Addon("cucumber", 2L);
+        Addon addon = new Addon("cucumber", 2);
 
         Addon save = service.save(addon);
 
