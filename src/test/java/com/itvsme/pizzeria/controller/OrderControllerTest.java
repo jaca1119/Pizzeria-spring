@@ -1,6 +1,7 @@
 package com.itvsme.pizzeria.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itvsme.pizzeria.model.order.OrderPizza;
 import com.itvsme.pizzeria.model.order.OrderPizzaCart;
 import com.itvsme.pizzeria.repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.repository.RequestLogRepository;
@@ -13,7 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.List;
+
 import static com.itvsme.pizzeria.utils.PizzaTestUtils.givenOrderPizzaCart;
+import static com.itvsme.pizzeria.utils.PizzaTestUtils.givenOrderPizzaCartOrderedStandardPizza;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -37,12 +41,7 @@ class OrderControllerTest
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    void createAllOrdersPizza()
-    {
-    }
-
-    @Test
-    void createOrderPizzaCart() throws Exception
+    void saveOrderPizzaCart() throws Exception
     {
         OrderPizzaCart orderPizzaCart = givenOrderPizzaCart();
 
@@ -60,4 +59,22 @@ class OrderControllerTest
         assertThat(mvcResult.getResponse().getContentAsString()).isEqualToIgnoringWhitespace(orderJson);
     }
 
+    @Test
+    void saveOrderPizzaCartWithOrderedPizza() throws Exception
+    {
+        OrderPizzaCart orderPizzaCart = givenOrderPizzaCartOrderedStandardPizza();
+
+        when(orderPizzaService.saveOrderPizzaCart(any(OrderPizzaCart.class))).thenReturn(orderPizzaCart);
+
+        String orderJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(orderPizzaCart);
+
+        MvcResult mvcResult = mockMvc.perform(post("/order-pizza-cart")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(orderJson)
+        ).andExpect(status().isCreated())
+                .andDo(print())
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getContentAsString()).isEqualToIgnoringWhitespace(orderJson);
+    }
 }

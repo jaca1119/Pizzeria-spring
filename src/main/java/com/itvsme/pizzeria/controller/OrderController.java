@@ -5,10 +5,7 @@ import com.itvsme.pizzeria.model.order.OrderPizzaCart;
 import com.itvsme.pizzeria.service.OrderPizzaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +19,12 @@ public class OrderController
     public OrderController(OrderPizzaService orderPizzaService)
     {
         this.orderPizzaService = orderPizzaService;
+    }
+
+    @GetMapping("/all-orders")
+    public ResponseEntity<List<OrderPizza>> getAllOrders()
+    {
+        return new ResponseEntity<>(orderPizzaService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping("/orders-pizza")
