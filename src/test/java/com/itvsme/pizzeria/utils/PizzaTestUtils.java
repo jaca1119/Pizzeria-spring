@@ -39,6 +39,11 @@ public class  PizzaTestUtils
         return new ComposedPizza(new Size(25, 1.1F), Stream.of(new AddonInput(new Addon("pepper", 300), 1),new AddonInput(new Addon("onion", 300),2)).collect(Collectors.toSet()));
     }
 
+    public static Size givenSize()
+    {
+        return new Size(25, 1.1F);
+    }
+
     public static OrderPizzaCart givenOrderPizzaCart()
     {
         return new OrderPizzaCart("name", "surname", "phone", Lists.list(givenStandardPizzaMargherita(), givenComposedPizza()));
