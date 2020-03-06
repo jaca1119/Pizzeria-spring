@@ -1,18 +1,14 @@
 package com.itvsme.pizzeria.service;
 
-import com.itvsme.pizzeria.model.*;
-import com.itvsme.pizzeria.repository.AddonRepository;
-import com.itvsme.pizzeria.repository.OrderPizzaRepository;
-import com.itvsme.pizzeria.repository.OrderPizzaCartRepository;
-import com.itvsme.pizzeria.repository.StandardPizzaRepository;
-import org.assertj.core.util.Lists;
+import com.itvsme.pizzeria.model.order.OrderPizzaCart;
+import com.itvsme.pizzeria.repository.*;
+import lombok.extern.log4j.Log4j2;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import java.util.List;
 
 import static com.itvsme.pizzeria.utils.PizzaTestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,13 +24,16 @@ public class OrderPizzaServiceTest
     private AddonRepository addonRepository;
     @Autowired
     private OrderPizzaCartRepository orderPizzaCartRepository;
+    @Autowired
+    private SizeRepository sizeRepository;
 
     private OrderPizzaService orderPizzaService;
+
 
     @BeforeEach
     void setUp()
     {
-        orderPizzaService = new OrderPizzaService(orderPizzaRepository, standardPizzaRepository, addonRepository, orderPizzaCartRepository);
+        orderPizzaService = new OrderPizzaService(orderPizzaRepository, standardPizzaRepository, addonRepository, orderPizzaCartRepository, sizeRepository);
     }
 
     @AfterEach
@@ -46,47 +45,6 @@ public class OrderPizzaServiceTest
     }
 
     @Test
-    void saveStandardPizzaToOrderPizza()
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-
-        OrderPizza saved = orderPizzaService.saveOrder(orderStandardPizza);
-
-        assertThat(orderStandardPizza).isEqualTo(saved);
-    }
-
-    @Test
-    void saveStandardPizzaAndComposedPizzaToOrderPizza()
-    {
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        orderPizzaService.saveOrder(orderStandardPizza);
-        orderPizzaService.saveOrder(orderComposedPizza);
-
-        List<OrderPizza> orderPizzas =  orderPizzaService.findAll();
-
-        assertThat(Lists.list(orderStandardPizza, orderComposedPizza)).isEqualTo(orderPizzas);
-        assertThat(addonRepository.count()).isEqualTo(3);
-    }
-
-    @Test
-    void saveAllOrdersPizza()
-    {
-
-        OrderStandardPizza orderStandardPizza = givenOrderStandardPizzaMargherita();
-
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        List<OrderPizza> orderPizzaList = Lists.list(orderStandardPizza, orderComposedPizza);
-
-        List<OrderPizza> orderPizzas = orderPizzaService.saveAll(orderPizzaList);
-
-        assertThat(orderPizzaList).isEqualTo(orderPizzas);
-    }
-
-    @Test
     void saveOrderPizzaCart()
     {
         OrderPizzaCart orderPizzaCart = givenOrderPizzaCart();
@@ -94,5 +52,15 @@ public class OrderPizzaServiceTest
         OrderPizzaCart orderWithListSave = orderPizzaService.saveOrderPizzaCart(orderPizzaCart);
 
         assertThat(orderPizzaCart).isEqualTo(orderWithListSave);
+    }
+
+    @Test
+    void saveOrderPizzaCartWithOrderedStandardPizza()
+    {
+        OrderPizzaCart orderPizzaCart = givenOrderPizzaCartOrderedStandardPizza();
+
+        OrderPizzaCart savedOrder = orderPizzaService.saveOrderPizzaCart(orderPizzaCart);
+
+        assertThat(orderPizzaCart.getPizzas()).containsAll(savedOrder.getPizzas());
     }
 }

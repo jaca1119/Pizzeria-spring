@@ -1,4 +1,4 @@
-package com.itvsme.pizzeria.model;
+package com.itvsme.pizzeria.model.pizza;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -11,7 +11,9 @@ import javax.persistence.*;
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = StandardPizza.class, name = "standard_pizza"),
-        @JsonSubTypes.Type(value = ComposedPizza.class, name = "composed_pizza")
+        @JsonSubTypes.Type(value = ComposedPizza.class, name = "composed_pizza"),
+        @JsonSubTypes.Type(value = OrderedStandardPizza.class, name = "ordered_standard_pizza")
+
 })
 @Entity
 @Getter @Setter

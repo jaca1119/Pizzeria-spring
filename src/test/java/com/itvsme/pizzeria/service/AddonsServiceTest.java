@@ -1,6 +1,6 @@
 package com.itvsme.pizzeria.service;
 
-import com.itvsme.pizzeria.model.Addon;
+import com.itvsme.pizzeria.model.addon.Addon;
 import com.itvsme.pizzeria.repository.AddonRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ class AddonsServiceTest
     @Test
     void getOneAddon()
     {
-        Addon addon = new Addon("cucumber", 2L);
+        Addon addon = new Addon("cucumber", 2);
 
         Addon save = service.save(addon);
 
