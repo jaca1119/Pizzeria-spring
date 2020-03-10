@@ -48,12 +48,17 @@ public class OrderPizzaService
         orderPizzaCart.getPizzas().forEach(pizza -> {
             if (pizza instanceof ComposedPizza)
             {
-                Set<AddonInput> addonsInput = ((ComposedPizza) pizza).getAddonsInput();
+                ComposedPizza composedPizza = (ComposedPizza) pizza;
+
+                Set<AddonInput> addonsInput = composedPizza.getAddonsInput();
                 addonsInput.forEach(addonInput -> {
                     Optional<Addon> optionalAddon = addonRepository.findByName(addonInput.getAddon().getName());
 
                     addonInput.setAddon(optionalAddon.orElse(addonInput.getAddon()));
                 });
+
+                Optional<Size> sizeInCm = sizeRepository.findBySizeInCm(composedPizza.getSize().getSizeInCm());
+                sizeInCm.ifPresent(composedPizza::setSize);
             }
             else if (pizza instanceof StandardPizza)
             {
@@ -67,6 +72,7 @@ public class OrderPizzaService
             else if (pizza instanceof OrderedStandardPizza)
             {
                 OrderedStandardPizza orderedStandardPizza = (OrderedStandardPizza) pizza;
+
                 Optional<StandardPizza> optionalStandardPizza = standardPizzaRepository.findByName(orderedStandardPizza.getStandardPizza().getName());
 
                 optionalStandardPizza.ifPresent(orderedStandardPizza::setStandardPizza);
