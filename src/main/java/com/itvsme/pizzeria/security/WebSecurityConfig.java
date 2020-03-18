@@ -25,6 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
                 .authorizeRequests()
                     .antMatchers(HttpMethod.GET,"/standard/**", "/addons/**", "/sizes").permitAll()
                     .antMatchers(HttpMethod.POST, "/order-pizza-cart").permitAll()
+                    .antMatchers(HttpMethod.OPTIONS, "/order-pizza-cart").permitAll()
                     .antMatchers("/all-orders").hasRole("ADMIN")
                     .anyRequest().hasRole("ADMIN")
                     .and()
