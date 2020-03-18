@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -31,12 +32,14 @@ public class AddonController
         return new ResponseEntity<>(addonsService.findById(id), HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping("/addons")
     public ResponseEntity<Addon> createAddon(@RequestBody Addon addon)
     {
         return new ResponseEntity<>(addonsService.save(addon), HttpStatus.CREATED);
     }
 
+    @Transactional
     @DeleteMapping("/addons/{id}")
     public ResponseEntity<Void> deleteAddon(@PathVariable Integer id)
     {

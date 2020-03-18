@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -29,18 +30,21 @@ public class PizzaController
         return new ResponseEntity<>(standardPizzaService.findAll(), HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping("/composed")
     public ResponseEntity<ComposedPizza> createComposedPizza(@RequestBody ComposedPizza pizza)
     {
         return new ResponseEntity<>(composedPizzaService.saveComposedPizza(pizza), HttpStatus.CREATED);
     }
 
+    @Transactional
     @PostMapping("/standard")
     public ResponseEntity<StandardPizza> saveStandardPizza(@RequestBody StandardPizza standardPizza)
     {
         return new ResponseEntity<>(standardPizzaService.save(standardPizza), HttpStatus.CREATED);
     }
 
+    @Transactional
     @DeleteMapping("/standard/{id}")
     public ResponseEntity<Void> deleteStandardPizza(@PathVariable Integer id)
     {

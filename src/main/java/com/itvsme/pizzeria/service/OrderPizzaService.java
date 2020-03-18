@@ -60,15 +60,6 @@ public class OrderPizzaService
                 Optional<Size> sizeInCm = sizeRepository.findBySizeInCm(composedPizza.getSize().getSizeInCm());
                 sizeInCm.ifPresent(composedPizza::setSize);
             }
-            else if (pizza instanceof StandardPizza)
-            {
-                Optional<StandardPizza> optionalStandardPizza = standardPizzaRepository.findByName(((StandardPizza) pizza).getName());
-
-                optionalStandardPizza.ifPresent(standardPizza -> {
-                    int index = orderPizzaCart.getPizzas().indexOf(pizza);
-                    orderPizzaCart.getPizzas().set(index, standardPizza);
-                });
-            }
             else if (pizza instanceof OrderedStandardPizza)
             {
                 OrderedStandardPizza orderedStandardPizza = (OrderedStandardPizza) pizza;
