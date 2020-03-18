@@ -2,7 +2,6 @@ package com.itvsme.pizzeria.logger;
 
 import com.itvsme.pizzeria.model.RequestLog;
 import com.itvsme.pizzeria.repository.RequestLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -16,7 +15,6 @@ public class RequestLogger extends HandlerInterceptorAdapter
 {
     private RequestLogRepository requestLogRepository;
 
-    @Autowired
     public RequestLogger(RequestLogRepository requestLogRepository)
     {
         this.requestLogRepository = requestLogRepository;

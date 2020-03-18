@@ -1,5 +1,6 @@
-package com.itvsme.pizzeria.model;
+package com.itvsme.pizzeria.model.order;
 
+import com.itvsme.pizzeria.model.pizza.Pizza;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

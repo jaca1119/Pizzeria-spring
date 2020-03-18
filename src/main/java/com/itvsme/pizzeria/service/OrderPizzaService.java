@@ -1,11 +1,14 @@
 package com.itvsme.pizzeria.service;
 
-import com.itvsme.pizzeria.model.*;
-import com.itvsme.pizzeria.repository.AddonRepository;
-import com.itvsme.pizzeria.repository.OrderPizzaCartRepository;
-import com.itvsme.pizzeria.repository.OrderPizzaRepository;
-import com.itvsme.pizzeria.repository.StandardPizzaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.itvsme.pizzeria.model.addon.Addon;
+import com.itvsme.pizzeria.model.addon.AddonInput;
+import com.itvsme.pizzeria.model.order.OrderPizza;
+import com.itvsme.pizzeria.model.order.OrderPizzaCart;
+import com.itvsme.pizzeria.model.pizza.ComposedPizza;
+import com.itvsme.pizzeria.model.pizza.OrderedStandardPizza;
+import com.itvsme.pizzeria.model.pizza.Size;
+import com.itvsme.pizzeria.model.pizza.StandardPizza;
+import com.itvsme.pizzeria.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,40 +22,15 @@ public class OrderPizzaService
     private StandardPizzaRepository standardPizzaRepository;
     private AddonRepository addonRepository;
     private OrderPizzaCartRepository orderPizzaCartRepository;
+    private SizeRepository sizeRepository;
 
-    @Autowired
-    public OrderPizzaService(OrderPizzaRepository orderPizzaRepository, StandardPizzaRepository standardPizzaRepository, AddonRepository addonRepository, OrderPizzaCartRepository orderPizzaCartRepository)
+    public OrderPizzaService(OrderPizzaRepository orderPizzaRepository, StandardPizzaRepository standardPizzaRepository, AddonRepository addonRepository, OrderPizzaCartRepository orderPizzaCartRepository, SizeRepository sizeRepository)
     {
         this.orderPizzaRepository = orderPizzaRepository;
         this.standardPizzaRepository = standardPizzaRepository;
         this.addonRepository = addonRepository;
         this.orderPizzaCartRepository = orderPizzaCartRepository;
-    }
-
-    public OrderPizzaService(OrderPizzaRepository orderPizzaRepository)
-    {
-        this.orderPizzaRepository = orderPizzaRepository;
-    }
-
-    public OrderPizza saveOrder(OrderPizza orderPizza)
-    {
-        if (orderPizza instanceof OrderComposedPizza)
-        {
-            Set<AddonInput> addonsInput = ((OrderComposedPizza) orderPizza).getComposedPizza().getAddonsInput();
-            addonsInput.forEach(addonInput -> {
-                Optional<Addon> optionalAddon = addonRepository.findByName(addonInput.getAddon().getName());
-
-                addonInput.setAddon(optionalAddon.orElse(addonInput.getAddon()));
-            });
-        }
-        else if (orderPizza instanceof OrderStandardPizza)
-        {
-            Optional<StandardPizza> optionalStandardPizza = standardPizzaRepository.findByName(((OrderStandardPizza) orderPizza).getStandardPizza().getName());
-
-            optionalStandardPizza.ifPresent(((OrderStandardPizza) orderPizza)::setStandardPizza);
-        }
-
-        return orderPizzaRepository.save(orderPizza);
+        this.sizeRepository = sizeRepository;
     }
 
     public List<OrderPizza> findAll()
@@ -70,21 +48,28 @@ public class OrderPizzaService
         orderPizzaCart.getPizzas().forEach(pizza -> {
             if (pizza instanceof ComposedPizza)
             {
-                Set<AddonInput> addonsInput = ((ComposedPizza) pizza).getAddonsInput();
+                ComposedPizza composedPizza = (ComposedPizza) pizza;
+
+                Set<AddonInput> addonsInput = composedPizza.getAddonsInput();
                 addonsInput.forEach(addonInput -> {
                     Optional<Addon> optionalAddon = addonRepository.findByName(addonInput.getAddon().getName());
 
                     addonInput.setAddon(optionalAddon.orElse(addonInput.getAddon()));
                 });
-            }
-            else if (pizza instanceof StandardPizza)
-            {
-                Optional<StandardPizza> optionalStandardPizza = standardPizzaRepository.findByName(((StandardPizza) pizza).getName());
 
-                optionalStandardPizza.ifPresent(standardPizza -> {
-                    int index = orderPizzaCart.getPizzas().indexOf(pizza);
-                    orderPizzaCart.getPizzas().set(index, standardPizza);
-                });
+                Optional<Size> sizeInCm = sizeRepository.findBySizeInCm(composedPizza.getSize().getSizeInCm());
+                sizeInCm.ifPresent(composedPizza::setSize);
+            }
+            else if (pizza instanceof OrderedStandardPizza)
+            {
+                OrderedStandardPizza orderedStandardPizza = (OrderedStandardPizza) pizza;
+
+                Optional<StandardPizza> optionalStandardPizza = standardPizzaRepository.findByName(orderedStandardPizza.getStandardPizza().getName());
+
+                optionalStandardPizza.ifPresent(orderedStandardPizza::setStandardPizza);
+
+                Optional<Size> sizeInCm = sizeRepository.findBySizeInCm(orderedStandardPizza.getSize().getSizeInCm());
+                sizeInCm.ifPresent(orderedStandardPizza::setSize);
             }
         });
         return orderPizzaCartRepository.save(orderPizzaCart);

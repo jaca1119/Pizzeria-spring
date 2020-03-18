@@ -1,8 +1,7 @@
 package com.itvsme.pizzeria.service;
 
-import com.itvsme.pizzeria.model.*;
+import com.itvsme.pizzeria.model.pizza.ComposedPizza;
 import com.itvsme.pizzeria.repository.*;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,22 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.itvsme.pizzeria.utils.PizzaTestUtils.*;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class ComposedPizzaServiceTest
 {
     @Autowired
-    private StandardPizzaRepository standardPizzaRepository;
-    @Autowired
     private ComposedPizzaRepository composedPizzaRepository;
     @Autowired
-    private OrderComposedPizzaRepository orderComposedPizzaRepository;
-    @Autowired
     private AddonRepository addonRepository;
-    @Autowired
-    private OrderPizzaRepository orderPizzaRepository;
     @Autowired
     private AddonInputRepository addonInputRepository;
 
@@ -38,7 +30,6 @@ public class ComposedPizzaServiceTest
     void tearDown()
     {
         composedPizzaRepository.deleteAll();
-        orderComposedPizzaRepository.deleteAll();
         addonRepository.deleteAll();
         addonInputRepository.deleteAll();
     }
@@ -46,7 +37,7 @@ public class ComposedPizzaServiceTest
     @BeforeEach
     void setUp()
     {
-        composedPizzaService = new ComposedPizzaService(composedPizzaRepository, orderComposedPizzaRepository, addonRepository);
+        composedPizzaService = new ComposedPizzaService(composedPizzaRepository, addonRepository);
     }
 
     @Test
@@ -78,56 +69,5 @@ public class ComposedPizzaServiceTest
         List<ComposedPizza> composedPizzaList = composedPizzaService.findAllComposedPizza();
 
         assertArrayEquals(composedPizzas.toArray(), composedPizzaList.toArray());
-    }
-
-    @Test
-    void saveComposedPizzaOrderTest()
-    {
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        OrderComposedPizza saved = composedPizzaService.saveOrder(orderComposedPizza);
-
-        assertEquals(orderComposedPizza, saved);
-    }
-
-    @Test
-    void saveOrderPizzaWithStandardPizza()
-    {
-        StandardPizza margherita = givenStandardPizzaMargherita();
-
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        standardPizzaRepository.save(margherita);
-
-        composedPizzaService.saveOrder(orderComposedPizza);
-
-        assertThat(addonRepository.count()).isEqualTo(3);
-        assertThat(addonInputRepository.count()).isEqualTo(2);
-    }
-
-    @Test
-    void findAllOrderPizzaTest()
-    {
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        OrderComposedPizza sampleOrder = givenOrderComposedPizza();
-
-        composedPizzaService.saveOrder(orderComposedPizza);
-        composedPizzaService.saveOrder(sampleOrder);
-
-        List<OrderComposedPizza> allOrderComposedPizza = composedPizzaService.findAllOrderPizza();
-
-        assertEquals(2, orderComposedPizzaRepository.count());
-        assertEquals(Lists.list(orderComposedPizza, sampleOrder), allOrderComposedPizza);
-    }
-
-    @Test
-    void getOrderPizza()
-    {
-        OrderComposedPizza orderComposedPizza = givenOrderComposedPizza();
-
-        OrderComposedPizza saveOrder = composedPizzaService.saveOrder(orderComposedPizza);
-
-        assertEquals(orderComposedPizza, saveOrder);
     }
 }
