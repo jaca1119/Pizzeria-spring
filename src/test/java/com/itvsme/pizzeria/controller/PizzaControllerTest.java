@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -59,6 +60,7 @@ public class PizzaControllerTest
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void saveStandardPizzaTest() throws Exception
     {
         StandardPizza standardPizza = givenStandardPizzaMargherita();
@@ -82,6 +84,7 @@ public class PizzaControllerTest
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void saveComposedPizzaTest() throws Exception
     {
         ComposedPizza composedPizza = givenComposedPizza();
@@ -104,6 +107,7 @@ public class PizzaControllerTest
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void deleteByIdStandardPizza() throws Exception
     {
         mockMvc.perform(delete("/standard/{id}", 1)
