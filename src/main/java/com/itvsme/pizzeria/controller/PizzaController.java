@@ -4,12 +4,14 @@ import com.itvsme.pizzeria.model.pizza.ComposedPizza;
 import com.itvsme.pizzeria.model.pizza.StandardPizza;
 import com.itvsme.pizzeria.service.ComposedPizzaService;
 import com.itvsme.pizzeria.service.StandardPizzaService;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @CrossOrigin
@@ -27,7 +29,7 @@ public class PizzaController
     @GetMapping("/standard")
     public ResponseEntity<List<StandardPizza>> getAllStandardPizzas()
     {
-        return new ResponseEntity<>(standardPizzaService.findAll(), HttpStatus.OK);
+        return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS)).body(standardPizzaService.findAll());
     }
 
     @Transactional
