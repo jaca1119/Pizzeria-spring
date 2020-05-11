@@ -29,7 +29,7 @@ public class PizzaController
     @GetMapping("/standard")
     public ResponseEntity<List<StandardPizza>> getAllStandardPizzas()
     {
-        return ResponseEntity.ok().header("Cache-Control", "no-transform, public, max-age=3600").body(standardPizzaService.findAll());
+        return ResponseEntity.ok().cacheControl(CacheControl.maxAge(3600, TimeUnit.SECONDS)).body(standardPizzaService.findAll());
     }
 
     @Transactional

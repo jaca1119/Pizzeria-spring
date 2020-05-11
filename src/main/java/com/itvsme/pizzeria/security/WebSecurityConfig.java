@@ -42,8 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         http
                 .cors(Customizer.withDefaults())
                 .csrf().disable()
-                .headers()
-                .cacheControl().disable().and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/standard/**", "/addons/**", "/sizes").permitAll()
                 .antMatchers(HttpMethod.POST, "/order-pizza-cart").permitAll()

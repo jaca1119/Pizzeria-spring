@@ -23,10 +23,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WithMockUser
 @WebMvcTest(value = AddonController.class)
 class AddonControllerTest
 {
@@ -51,7 +49,8 @@ class AddonControllerTest
 
         mockMvc.perform(MockMvcRequestBuilders.get("/addons")
                 .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(jsonPath("$", hasSize(2))).andDo(print());
+        ).andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(header().string("Cache-control", "max-age=3600")).andDo(print());
     }
 
     @Test

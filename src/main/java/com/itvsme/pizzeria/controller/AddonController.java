@@ -25,7 +25,7 @@ public class AddonController
     @GetMapping("/addons")
     public ResponseEntity<List<Addon>> getAllAddons()
     {
-        return ResponseEntity.ok().header("Cache-Control", "no-transform, public, max-age=3600").body(addonsService.findAll());
+        return ResponseEntity.ok().cacheControl(CacheControl.maxAge(3600, TimeUnit.SECONDS)).body(addonsService.findAll());
     }
 
     @GetMapping("/addons/{id}")
