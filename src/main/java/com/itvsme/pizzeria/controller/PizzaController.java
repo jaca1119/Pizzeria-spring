@@ -18,12 +18,10 @@ import java.util.concurrent.TimeUnit;
 public class PizzaController
 {
     private StandardPizzaService standardPizzaService;
-    private ComposedPizzaService composedPizzaService;
 
-    public PizzaController(StandardPizzaService standardPizzaService, ComposedPizzaService composedPizzaService)
+    public PizzaController(StandardPizzaService standardPizzaService)
     {
         this.standardPizzaService = standardPizzaService;
-        this.composedPizzaService = composedPizzaService;
     }
 
     @GetMapping("/standard")
@@ -33,23 +31,10 @@ public class PizzaController
     }
 
     @Transactional
-    @PostMapping("/composed")
-    public ResponseEntity<ComposedPizza> createComposedPizza(@RequestBody ComposedPizza pizza)
-    {
-        return new ResponseEntity<>(composedPizzaService.saveComposedPizza(pizza), HttpStatus.CREATED);
-    }
-
-    @Transactional
     @PostMapping("/standard")
     public ResponseEntity<StandardPizza> saveStandardPizza(@RequestBody StandardPizza standardPizza)
     {
         return new ResponseEntity<>(standardPizzaService.save(standardPizza), HttpStatus.CREATED);
     }
 
-    @Transactional
-    @DeleteMapping("/standard/{id}")
-    public ResponseEntity<Void> deleteStandardPizza(@PathVariable Integer id)
-    {
-        return new ResponseEntity<>(standardPizzaService.deleteById(id), HttpStatus.OK);
-    }
 }

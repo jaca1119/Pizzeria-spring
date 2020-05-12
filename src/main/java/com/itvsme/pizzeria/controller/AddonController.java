@@ -27,24 +27,4 @@ public class AddonController
     {
         return ResponseEntity.ok().cacheControl(CacheControl.maxAge(3600, TimeUnit.SECONDS)).body(addonsService.findAll());
     }
-
-    @GetMapping("/addons/{id}")
-    public ResponseEntity<Addon> getAddonById(@PathVariable Integer id)
-    {
-        return new ResponseEntity<>(addonsService.findById(id), HttpStatus.OK);
-    }
-
-    @Transactional
-    @PostMapping("/addons")
-    public ResponseEntity<Addon> createAddon(@RequestBody Addon addon)
-    {
-        return new ResponseEntity<>(addonsService.save(addon), HttpStatus.CREATED);
-    }
-
-    @Transactional
-    @DeleteMapping("/addons/{id}")
-    public ResponseEntity<Void> deleteAddon(@PathVariable Integer id)
-    {
-        return new ResponseEntity<>(addonsService.deleteById(id), HttpStatus.OK);
-    }
 }

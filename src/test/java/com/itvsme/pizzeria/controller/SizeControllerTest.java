@@ -56,23 +56,4 @@ class SizeControllerTest
                 .andDo(print());
     }
 
-    @Test
-    @WithMockUser(roles = {"ADMIN"})
-    void saveSize() throws Exception
-    {
-        Size size = givenSize();
-
-        when(sizeRepository.save(ArgumentMatchers.any(Size.class))).thenReturn(size);
-
-        String sizeJson = objectMapper.writeValueAsString(size);
-
-        mockMvc.perform(post("/sizes")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(sizeJson))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.sizeInCm").value(size.getSizeInCm()))
-                .andExpect(jsonPath("$.priceMultiplier").value(size.getPriceMultiplier()))
-                .andDo(print());
-
-    }
 }

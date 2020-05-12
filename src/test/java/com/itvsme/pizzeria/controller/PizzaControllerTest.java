@@ -83,36 +83,4 @@ public class PizzaControllerTest
         .andDo(print());
     }
 
-    @Test
-    @WithMockUser(roles = {"ADMIN"})
-    void saveComposedPizzaTest() throws Exception
-    {
-        ComposedPizza composedPizza = givenComposedPizza();
-
-        when(composedPizzaService.saveComposedPizza(any(ComposedPizza.class))).thenReturn(composedPizza);
-
-        String composedPizzaJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(composedPizza);
-
-        ResultActions result = mockMvc.perform(post("/composed")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(composedPizzaJson));
-
-        result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.composed_pizza.addonsInput[0].addon.name").value("onion"))
-                .andExpect(jsonPath("$.composed_pizza.addonsInput[0].addon.price").value(300))
-                .andExpect(jsonPath("$.composed_pizza.addonsInput[1].addon.name").value("mice"))
-                .andExpect(jsonPath("$.composed_pizza.addonsInput[1].addon.price").value(300))
-                .andExpect(jsonPath("$.composed_pizza.size.sizeInCm").value(25))
-                .andExpect(jsonPath("$.composed_pizza.size.priceMultiplier").value(1.1F));
-    }
-
-    @Test
-    @WithMockUser(roles = {"ADMIN"})
-    void deleteByIdStandardPizza() throws Exception
-    {
-        mockMvc.perform(delete("/standard/{id}", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isOk());
-    }
 }

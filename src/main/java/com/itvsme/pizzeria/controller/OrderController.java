@@ -29,13 +29,6 @@ public class OrderController
     }
 
     @Transactional
-    @PostMapping("/orders-pizza")
-    public ResponseEntity<List<OrderPizza>> createOrdersFromList(@RequestBody List<OrderPizza> orderPizzas)
-    {
-        return new ResponseEntity<>(orderPizzaService.saveAll(orderPizzas), HttpStatus.CREATED);
-    }
-
-    @Transactional
     @PostMapping("/order-pizza-cart")
     public ResponseEntity<OrderPizzaCart> createOrderPizzaCart(@RequestBody OrderPizzaCart orderPizzaCart)
     {

@@ -53,45 +53,4 @@ class AddonControllerTest
                 .andExpect(header().string("Cache-control", "max-age=3600")).andDo(print());
     }
 
-    @Test
-    void getAddonById() throws Exception
-    {
-        Addon addon = givenAddon();
-
-        when(addonsService.findById(any(Integer.class))).thenReturn(addon);
-
-        mockMvc.perform(get("/addons/{id}", 1)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("cucumber"))
-                .andExpect(jsonPath("$.price").value(200));
-    }
-
-    @Test
-    @WithMockUser(roles = {"ADMIN"})
-    void createAddon() throws Exception
-    {
-        Addon addon = givenAddon();
-        when(addonsService.save(any(Addon.class))).thenReturn(addon);
-
-        String addonToJson = objectMapper.writeValueAsString(addon);
-
-        ResultActions result = mockMvc.perform(post("/addons")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(addonToJson));
-
-        result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("cucumber"))
-                .andExpect(jsonPath("$.price").value(200));
-    }
-
-    @Test
-    @WithMockUser(roles = {"ADMIN"})
-    void deleteAddonById() throws Exception
-    {
-        mockMvc.perform(delete("/addons/{id}", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk());
-    }
 }

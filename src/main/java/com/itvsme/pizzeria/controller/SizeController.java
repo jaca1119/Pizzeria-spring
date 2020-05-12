@@ -28,10 +28,4 @@ public class SizeController
         return ResponseEntity.ok().cacheControl(CacheControl.maxAge(3600, TimeUnit.SECONDS)).body(sizeRepository.findAll());
     }
 
-    @Transactional
-    @PostMapping("/sizes")
-    public ResponseEntity<Size> saveSize(@RequestBody Size size)
-    {
-        return new ResponseEntity<>(sizeRepository.save(size), HttpStatus.CREATED);
-    }
 }
