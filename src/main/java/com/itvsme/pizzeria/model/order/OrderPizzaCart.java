@@ -1,5 +1,6 @@
 package com.itvsme.pizzeria.model.order;
 
+import com.itvsme.pizzeria.model.payment.Payment;
 import com.itvsme.pizzeria.model.pizza.Pizza;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class OrderPizzaCart extends OrderPizza
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_pizza_cart_id")
     private List<Pizza> pizzas;
+    private Payment paymentStatus;
 
 
     public OrderPizzaCart(String name, String surname, String phone, List<Pizza> pizzas)
