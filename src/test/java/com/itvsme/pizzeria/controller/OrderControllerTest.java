@@ -22,11 +22,11 @@ import static com.itvsme.pizzeria.utils.PizzaTestUtils.givenOrderPizzaCartOrdere
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WithMockUser
 @WebMvcTest(OrderController.class)
 class OrderControllerTest
 {
@@ -79,5 +79,23 @@ class OrderControllerTest
                 .andReturn();
 
         assertThat(mvcResult.getResponse().getContentAsString()).isEqualToIgnoringWhitespace(orderJson);
+    }
+
+    @Test
+    void testAcceptingPendingOrderPayment() throws Exception
+    {
+        when(orderPizzaService.acceptPaymentForOrder(any(Integer.class))).thenReturn(true);
+
+        mockMvc.perform(patch("/order-pizza-cart/payment/{id}", 1))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    void testNotAcceptingPendingOrderPayment() throws Exception
+    {
+        when(orderPizzaService.acceptPaymentForOrder(any(Integer.class))).thenReturn(false);
+
+        mockMvc.perform(patch("/order-pizza-cart/payment/{id}", 1))
+                .andExpect(status().isBadRequest()).andDo(print());
     }
 }

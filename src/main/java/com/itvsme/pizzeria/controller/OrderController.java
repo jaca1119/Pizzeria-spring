@@ -34,4 +34,20 @@ public class OrderController
     {
         return new ResponseEntity<>(orderPizzaService.saveOrderPizzaCart(orderPizzaCart), HttpStatus.CREATED);
     }
+
+    @Transactional
+    @PatchMapping("/order-pizza-cart/payment/{id}")
+    public ResponseEntity<Void> acceptPaymentForOrder(@PathVariable int id)
+    {
+        boolean isAcceptSuccessful = orderPizzaService.acceptPaymentForOrder(id);
+
+        if (isAcceptSuccessful)
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

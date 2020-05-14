@@ -4,6 +4,7 @@ import com.itvsme.pizzeria.model.addon.Addon;
 import com.itvsme.pizzeria.model.addon.AddonInput;
 import com.itvsme.pizzeria.model.order.OrderPizza;
 import com.itvsme.pizzeria.model.order.OrderPizzaCart;
+import com.itvsme.pizzeria.model.payment.Payment;
 import com.itvsme.pizzeria.model.pizza.ComposedPizza;
 import com.itvsme.pizzeria.model.pizza.OrderedStandardPizza;
 import com.itvsme.pizzeria.model.pizza.Size;
@@ -72,6 +73,25 @@ public class OrderPizzaService
                 sizeInCm.ifPresent(orderedStandardPizza::setSize);
             }
         });
+
+        orderPizzaCart.setPaymentStatus(Payment.PENDING);
         return orderPizzaCartRepository.save(orderPizzaCart);
+    }
+
+    public boolean acceptPaymentForOrder(int id)
+    {
+        Optional<OrderPizzaCart> order = orderPizzaCartRepository.findById(id);
+
+        if (order.isPresent())
+        {
+            OrderPizzaCart orderPizzaCart = order.get();
+            orderPizzaCart.setPaymentStatus(Payment.ACCEPTED);
+            orderPizzaCartRepository.save(orderPizzaCart);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
