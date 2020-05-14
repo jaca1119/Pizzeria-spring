@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("https://goofy-hugle-5739c9.netlify.com", "http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("https://pizzeria-spring.herokuapp.com", "http://localhost:3000"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "OPTIONS"));
         configuration.setAllowCredentials(true);
