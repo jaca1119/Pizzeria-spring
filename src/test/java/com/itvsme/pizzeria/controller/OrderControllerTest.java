@@ -3,6 +3,7 @@ package com.itvsme.pizzeria.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itvsme.pizzeria.model.order.OrderPizza;
 import com.itvsme.pizzeria.model.order.OrderPizzaCart;
+import com.itvsme.pizzeria.model.payment.Payment;
 import com.itvsme.pizzeria.repository.OrderPizzaRepository;
 import com.itvsme.pizzeria.repository.RequestLogRepository;
 import com.itvsme.pizzeria.service.OrderPizzaService;
@@ -66,6 +67,7 @@ class OrderControllerTest
     void saveOrderPizzaCartWithOrderedPizza() throws Exception
     {
         OrderPizzaCart orderPizzaCart = givenOrderPizzaCartOrderedStandardPizza();
+        orderPizzaCart.setPaymentStatus(Payment.PENDING);
 
         when(orderPizzaService.saveOrderPizzaCart(any(OrderPizzaCart.class))).thenReturn(orderPizzaCart);
 
