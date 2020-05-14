@@ -23,8 +23,7 @@ import static com.itvsme.pizzeria.utils.PizzaTestUtils.givenOrderPizzaCartOrdere
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -99,5 +98,14 @@ class OrderControllerTest
 
         mockMvc.perform(patch("/order-pizza-cart/payment/{id}", 1))
                 .andExpect(status().isBadRequest()).andDo(print());
+    }
+
+    @Test
+    void testPreflightOptions() throws Exception
+    {
+        mockMvc.perform(options("/order-pizza-cart/payment/{id}", 1)
+            .header("Access-Control-Request-Method", "PATCH")
+            .header("Origin", "http://localhost:3000"))
+                .andExpect(status().isOk()).andDo(print());
     }
 }
