@@ -55,8 +55,11 @@ public class PizzaControllerTest
         when(standardPizzaService.findAll()).thenReturn(standardPizzaList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/standard")
-        .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(jsonPath("$", hasSize(2))).andDo(print());
+                .header("Origin", "https://goofy-hugle-5739c9.netlify.app")
+                .characterEncoding("UTF8")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2))).andDo(print());
     }
 
     @Test

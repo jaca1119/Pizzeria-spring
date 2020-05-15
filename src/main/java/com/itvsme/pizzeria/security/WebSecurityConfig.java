@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     protected void configure(HttpSecurity http) throws Exception
     {
         http
-                .cors(Customizer.withDefaults())
+                .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/standard/**", "/addons/**", "/sizes").permitAll()
@@ -57,14 +57,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource()
-    {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("https://pizzeria-spring.herokuapp.com", "http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("https://goofy-hugle-5739c9.netlify.app", "http://localhost:3000"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "OPTIONS"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PATCH"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

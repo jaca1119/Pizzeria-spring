@@ -43,7 +43,6 @@ class OrderControllerTest
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    @WithMockUser(roles = {"ADMIN"})
     void saveOrderPizzaCart() throws Exception
     {
         OrderPizzaCart orderPizzaCart = givenOrderPizzaCart();
@@ -54,6 +53,8 @@ class OrderControllerTest
 
         MvcResult mvcResult = mockMvc.perform(post("/order-pizza-cart")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Origin", "https://goofy-hugle-5739c9.netlify.app")
+                .header("Access-Control-Request-Method", "POST")
                 .content(orderJson)
         ).andExpect(status().isCreated())
                 .andDo(print())
@@ -73,6 +74,7 @@ class OrderControllerTest
         String orderJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(orderPizzaCart);
 
         MvcResult mvcResult = mockMvc.perform(post("/order-pizza-cart")
+                .header("Origin", "https://goofy-hugle-5739c9.netlify.app")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(orderJson)
         ).andExpect(status().isCreated())

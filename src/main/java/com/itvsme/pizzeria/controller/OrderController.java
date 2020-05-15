@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
-@CrossOrigin
 public class OrderController
 {
     private OrderPizzaService orderPizzaService;
